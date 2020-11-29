@@ -11,6 +11,7 @@ pthread_mutex_t buffer_lock;
 int total_num_msg = 0;
 int listen_fd;
 
+// What happens when Ctrl-C is pressed when the server is running
 void sigint_handler(int sig) {
     printf("shutting down server\n");
     close(listen_fd);
@@ -126,6 +127,7 @@ void run_server(int server_port) {
         // Wait and Accept the connection from client
         printf("Wait for new client connection\n");
         int *client_fd = malloc(sizeof(int));
+        petr_header* petr = NULL;
         *client_fd = accept(listen_fd, (SA *)&client_addr, (socklen_t*)&client_addr_len);
         if (*client_fd < 0) {
             printf("server acccept failed\n");
