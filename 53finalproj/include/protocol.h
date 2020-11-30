@@ -5,25 +5,25 @@
 
 // These are the message types for the PETR protocol
 enum msg_types {
-    OK,
+    OK = 0x00,
     LOGIN = 0x10,
-    LOGOUT,
+    LOGOUT = 0x11,
     EUSREXISTS = 0x1a,
     RMCREATE = 0x20,
-    RMDELETE,
-    RMCLOSED,
-    RMLIST,
-    RMJOIN,
-    RMLEAVE,
-    RMSEND,
-    RMRECV,
+    RMDELETE = 0x21,
+    RMCLOSED = 0x22,
+    RMLIST = 0x23,
+    RMJOIN = 0x24,
+    RMLEAVE = 0x25,
+    RMSEND = 0x26,
+    RMRECV = 0x27,
     ERMEXISTS = 0x2a,
-    ERMFULL,
-    ERMNOTFOUND,
-    ERMDENIED,
+    ERMFULL = 0x2b,
+    ERMNOTFOUND = 0x2c,
+    ERMDENIED = 0x2d,
     USRSEND = 0x30,
-    USRRECV,
-    USRLIST,
+    USRRECV = 0x31,
+    USRLIST = 0x32,
     EUSRNOTFOUND = 0x3a,
     ESERV = 0xff
 };
@@ -34,7 +34,13 @@ typedef struct {
     uint8_t msg_type;
 } petr_header;
 
+// Read a petr_header from the socket_fd. Places content into memory.
+// Referenced by h. Returns 0 upon success, -1 on error.
 int rd_msgheader(int socket_fd, petr_header *h);
+
+// Write petr_header reference by h and the msgbuf to the socket_fd
+// If the msg_len is 0, msg_buf is ignored
+// Returns 0 upon success, -1 on error.
 int wr_msg(int socket_fd, petr_header *h, char *msgbuf);
 
 #endif
