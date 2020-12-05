@@ -20,10 +20,12 @@ typedef struct Room {
 
 // Holds Job information
 typedef struct Job {
+    int client;
     uint8_t protocol;
     char *data;
 } job_t;
 
+char *getUserList(List_t *list, int client);
 void printUserList(List_t* list);
 user_t *findUser(List_t *list, char* n);
 void removeUser(List_t *list, char *name);

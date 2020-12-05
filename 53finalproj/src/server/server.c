@@ -11,9 +11,15 @@ const char exit_str[] = "exit";
 
 char buffer[BUFFER_SIZE];
 pthread_mutex_t buffer_lock;
+int reqcnt = 0;
+
+
+pthread_mutex_t job_lock;
 
 int total_num_msg = 0;
 int listen_fd;
+
+char *auditLog = NULL;
 
 // Audit Log
 void writeToAudit(char c[]){
@@ -25,16 +31,17 @@ void writeToAudit(char c[]){
     sTm = gmtime (&now);
     strftime (buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
     
-    fp = fopen(".\\auditLog.txt","a");
+    fp = fopen(auditLog,"a");
     fprintf(fp,"%s", c);
     fprintf(fp," %s\n", buff);
     
     fclose(fp);
 }
+
 void readFromAudit(){
     FILE *fp;
     char c;
-    fp = fopen(".\\auditLog.txt","r");
+    fp = fopen(auditLog,"r");
     do {
       c = fgetc(fp);
       if( feof(fp) ) {
@@ -44,9 +51,10 @@ void readFromAudit(){
     } while(1);
     fclose(fp);
 }
+
 void clearAuditLog(){
     FILE *fp;
-    fp = fopen(".\\auditLog.txt","w");
+    fp = fopen(auditLog,"w");
     fclose(fp);
 }
 
@@ -62,6 +70,7 @@ List_t *jobs;
 // What happens when Ctrl-C is pressed when the server is running
 void sigint_handler(int sig) {
     printf("shutting down server\n");
+    cleanUsers(users);
     close(listen_fd);
     exit(0);
 }
@@ -112,132 +121,92 @@ int server_init(int server_port) {
     return sockfd;
 }
 
-
-// Processes client (CAN REMOVE LATER)
-void *process_client(void *clientfd_ptr) {
-    int client_fd = *(int *)clientfd_ptr;
-    free(clientfd_ptr);
+// Job thread
+//threadid Don't know yet
+void *job_thread(void *threadId){
+    long tid;
+    tid = (long)threadId;
+    
+    printf("Job thread created! Thread ID, %ld\n", tid);
+    while (1) {
+        pthread_mutex_lock(&job_lock);
+        if (jobs->length > 0) {
+            job_t *currJob = (job_t *) removeFront(jobs);
+            printf("Protocol: %d\n", currJob->protocol);
+            if (currJob->protocol == USRLIST) {
+                int client_fd = currJob->client;
+                char *payload = getUserList(users, client_fd);
+                size_t size = 0;
+                if (payload != NULL) {
+                    size = sizeof(payload);
+                }
+                petr_header res = {size, USRLIST};
+                wr_msg(client_fd, &res, payload);
+            }
+        }
+        pthread_mutex_unlock(&job_lock);
+    }
+    pthread_exit(NULL);
+}
+// Client thread
+void *client_thread(void *clientfd) {
+    int client_fd = *(int *)clientfd;
+    free(clientfd);
     int received_size;
     fd_set read_fds;
-
+    
     int retval;
+   
     while (1) {
         FD_ZERO(&read_fds);
         FD_SET(client_fd, &read_fds);
         retval = select(client_fd + 1, &read_fds, NULL, NULL, NULL);
-        if (retval != 1 && !FD_ISSET(client_fd, &read_fds)) {
+        if (retval != -1 && !FD_ISSET(client_fd, &read_fds)) {
             printf("Error with select() function\n");
             break;
         }
 
         pthread_mutex_lock(&buffer_lock);
-
-        bzero(buffer, BUFFER_SIZE);
-        received_size = read(client_fd, buffer, sizeof(buffer));
-
-        if (received_size < 0) {
-            printf("Receiving failed\n");
-            break;
-        } else if (received_size == 0) {
-            continue;
-        }
-
-        petr_header *petrHeader = (petr_header *) buffer;
-        printf("MSG_LEN: %d\n", petrHeader->msg_len);
-        printf("MSG_TYPE: %d\n", petrHeader->msg_type);
-        char messageBody[petrHeader->msg_len];
-        memcpy(messageBody, &buffer[8], petrHeader->msg_len);
-        printf("MSG_BODY: %s\n", messageBody);
-
-        if (strncmp(exit_str, buffer, sizeof(exit_str)) == 0) {
-            printf("Client exit\n");
-            break;
-        }
-
-        total_num_msg++;
-        // print buffer which contains the client contents
-        // printf("Receive message from client: %s\n", buffer);
-        // printf("Total number of received messages: %d\n", total_num_msg);
-
-        sleep(1); //mimic a time comsuming process
-
-        // and send that buffer to client
-        // int ret = write(client_fd, buffer, received_size);
-
-
-        int ret = 0;
-        // LOGIN request
-        if (petrHeader->msg_type == LOGIN) {
-            // TODO: check if username is not taken
-
-            // adds user to user list and sends OK
-            petr_header petr = {0, OK};
-            petrHeader = &petr;
-            ret = wr_msg(client_fd, petrHeader, buffer);
-        }
-        
+        reqcnt += 1;
+        if (reqcnt == 1)
+            pthread_mutex_lock(&job_lock);
         pthread_mutex_unlock(&buffer_lock);
 
-        if (ret < 0) {
-            printf("Sending failed\n");
-            break;
-        }
-        printf("Send the message back to client: %s\n", buffer);
-    }
-    // Close the socket at the end
-    printf("Close current client connection\n");
-    close(client_fd);
-    
-    char c[] = "Close current client connection";
-    writeToAudit(c);
-    
-    return NULL;
-}
-// Job thread
-void *job_thread(void *threadid){
-    long tid;
-    tid = (long)threadid;
-    printf("Hello World! Thread ID, %ld\n", tid);
-    pthread_exit(NULL);
-    
-}
-// Client thread
-void *client_thread(void *clientfd) {
-    int client_fd = *(int *)clientfd;
-    int received_size;
-    fd_set read_fds;
-    
-    int retval;
-   
-   
-    while (1) {
-        pthread_mutex_lock(&buffer_lock);
-
         bzero(buffer, BUFFER_SIZE);
         received_size = read(client_fd, buffer, sizeof(buffer));
-        
         if (received_size < 0) {
             printf("Receiving failed\n");
             break;
-        } else if (received_size == 0) {
+        } 
+        else if (received_size == 0) {
             continue;
         }
-        
-        petr_header *petrHeader = (petr_header *) buffer;
-        printf("MSG_LEN: %d\n", petrHeader->msg_len);
-        printf("MSG_TYPE: %d\n", petrHeader->msg_type);
-        char messageBody[petrHeader->msg_len];
-        memcpy(messageBody, &buffer[8], petrHeader->msg_len);
-        printf("MSG_BODY: %s\n", messageBody);
 
         //Read MSG from Client
-        int ret = rd_msgheader(client_fd, petrHeader);
+        petr_header *petrHeader = (petr_header *) buffer;
+        char *messageBody = NULL;
+        if (petrHeader->msg_len != 0) {
+            messageBody = malloc(petrHeader->msg_len);
+            memcpy(messageBody, &buffer[8], petrHeader->msg_len);
+        }
+
+
+        // printf("Job list: %d\n", jobs->length);
+        job_t *job = malloc(sizeof(job_t));
+        job->client = client_fd;
+        job->protocol = petrHeader->msg_type;
+        job->data = messageBody;
 
         //Insert MSG to Job Buffer
-        insertRear(jobs, &ret);
+        insertRear(jobs, job);
+        // printf("Job list: %d\n", jobs->length);
 
+        pthread_mutex_lock(&buffer_lock);
+        reqcnt -= 1;
+        if (reqcnt == 0)
+            pthread_mutex_unlock(&job_lock);
         pthread_mutex_unlock(&buffer_lock);
-        
+         
     }
     char c[] = "Terminating Thread";
     writeToAudit(c);
@@ -273,9 +242,8 @@ void run_server(int server_port, int numThreads) {
     
     // Creates the job threads on start up
     int i;
-    for (i = 0; i < numThreads; i++) {
-        pthread_create(&tid, NULL, job_thread, (void *) client_fd);
-    }
+    for (i = 0; i < numThreads; i++)
+        pthread_create(&tid, NULL, job_thread, NULL);
 
     while (1) {
         // Wait connection from client
@@ -336,12 +304,12 @@ void run_server(int server_port, int numThreads) {
                     strcat(c, "");
                     writeToAudit(c);
                     
+                    // Spawn client thread
+                    pthread_create(&tid, NULL, client_thread, (void *)client_fd); 
+
                     strcpy(c, "Making client thread.");
                     writeToAudit(c);
                     free(c);
-
-                    // Spawn client thread
-                    pthread_create(&tid, NULL, client_thread, (void *)client_fd); 
                 }
                 else { // If it is already taken
                     strcpy(c, "Client rejected because username already exists\n");
@@ -379,7 +347,7 @@ int main(int argc, char *argv[]) {
 
     unsigned int port = 0;
     unsigned int n = 2;
-    while ((opt = getopt(argc, argv, "hjp:")) != -1) {
+    while ((opt = getopt(argc, argv, "hj:")) != -1) {
         switch (opt) {
         case 'h':
             fprintf(stderr, "./bin/petr_server [-h] [-j N] PORT_NUMBER AUDIT_FILENAME\n");
@@ -389,28 +357,37 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "AUDIT_FILENAME    File to output Audit Log messages to.\n");
             fprintf(stderr, "PORT_NUMBER       Port number to listen to.\n");
             exit(EXIT_SUCCESS);
-        case 'p':
-            port = atoi(optarg);
-            break;
         case 'j':
-            n = atoi(optarg);
+            n = atoi(optarg);  
             break;
         default: /* '?' */
-            fprintf(stderr, "Server Application Usage: %s -p <port_number>\n",
-                    argv[0]);
+            fprintf(stderr, "./bin/petr_server [-h] [-j N] PORT_NUMBER AUDIT_FILENAME\n");
             exit(EXIT_FAILURE);
         }
+    }
+   
+    //optind intialized to 1 by the system, 
+    //getopt updates it when it processes the option characters
+    //argv[i]: ./bin/petr_server 3200 
+    port = atoi(*(argv + optind));
+   
+    //argv[i+1]: ./bin/petr_server 3200 audit.txt
+    if(*(argv + optind + 1) != NULL){
+        strcpy(auditLog, *(argv + optind + 1));
+    }
+    else {
+        auditLog = "auditLog.txt";
     }
 
     if (port == 0) {
         fprintf(stderr, "ERROR: Port number for server to listen is not given\n");
-        // fprintf(stderr, "Server Application Usage: %s -p <port_number>\n", argv[0]);
+        fprintf(stderr, "./bin/petr_server [-h] [-j N] PORT_NUMBER AUDIT_FILENAME\n");
         exit(EXIT_FAILURE);
     }
 
     if (n == 0) {
-        fprintf(stderr, "ERROR: Number of job threads for server to listen is not given\n");
-        // fprintf(stderr, "Server Application Usage: %s -p <port_number>\n", argv[0]);
+        fprintf(stderr, "ERROR: Number of job threads for server is not given\n");
+        fprintf(stderr, "./bin/petr_server [-h] [-j N] PORT_NUMBER AUDIT_FILENAME\n");
         exit(EXIT_FAILURE);
     }
 

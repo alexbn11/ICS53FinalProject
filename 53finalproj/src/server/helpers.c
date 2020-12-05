@@ -5,12 +5,34 @@
 #include "linkedList.h"
 
 
+char *getUserList(List_t *list, int client) {
+    char *names = NULL;
+    node_t *head = list->head;
+    int i = 0;
+    while (head != NULL) {
+        user_t *user = (user_t *) head->value;
+        if (user->fd != client) {
+            if (names == NULL) {
+                names = malloc(sizeof(user->name));
+                strcpy(names, user->name);
+                strcat(names, "\n");
+            }
+            else {
+                strcat(names, user->name);
+                strcat(names, "\n");
+            }
+        }
+        head = head->next;
+    }
+    return names;
+}
+
 void printUserList(List_t* list) {
     node_t *head = list->head;
     printf("Online users:\n");
     while (head != NULL) {
         user_t *user = (user_t *) head->value;
-        printf("    %s\n", user->name);
+        printf("%s %d\n", user->name, user->fd);
         head = head->next;
     }
 }
@@ -28,6 +50,7 @@ user_t *findUser(List_t *list, char* name) {
     return NULL;
 }
 
+// Remove user from linked list
 void removeUser(List_t *list, char *name) {
     if (name == NULL) {
         user_t *user = (user_t *) removeFront(list);
@@ -55,11 +78,13 @@ void removeUser(List_t *list, char *name) {
     }
 }
 
+// Clean the user list
 void cleanUsers(List_t *list) {
     while (list->head != NULL) {
         removeUser(list, NULL);
     }
 }
 
+// Clean the room list
 void cleanRooms(List_t *list) {
 }

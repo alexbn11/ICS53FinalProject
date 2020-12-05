@@ -1,0 +1,614 @@
+New client connection 2020-12-04 21:30:56
+Client message accepted 2020-12-04 21:30:56
+New LOGIN message from client 2020-12-04 21:30:56
+Client successfully login as: petr 2020-12-04 21:30:56
+Making client thread. 2020-12-04 21:30:56
+New client connection 2020-12-04 21:50:12
+Client message accepted 2020-12-04 21:50:12
+New LOGIN message from client 2020-12-04 21:50:12
+Client successfully login as: petr 2020-12-04 21:50:12
+Making client thread. 2020-12-04 21:50:12
+New client connection 2020-12-04 21:50:55
+Client message accepted 2020-12-04 21:50:55
+New LOGIN message from client 2020-12-04 21:50:55
+Client successfully login as: petr 2020-12-04 21:50:55
+Making client thread. 2020-12-04 21:50:55
+New client connection 2020-12-04 21:51:18
+Client message accepted 2020-12-04 21:51:18
+New LOGIN message from client 2020-12-04 21:51:18
+Client successfully login as: petr 2020-12-04 21:51:18
+Making client thread. 2020-12-04 21:51:18
+New client connection 2020-12-04 21:51:51
+Client message accepted 2020-12-04 21:51:51
+New LOGIN message from client 2020-12-04 21:51:51
+Client successfully login as: petr 2020-12-04 21:51:51
+Making client thread. 2020-12-04 21:51:51
+New client connection 2020-12-04 22:58:43
+Client message accepted 2020-12-04 22:58:43
+New LOGIN message from client 2020-12-04 22:58:43
+Client successfully login as: petr 2020-12-04 22:58:43
+Making client thread. 2020-12-04 22:58:43
+New client connection 2020-12-04 22:59:45
+Client message accepted 2020-12-04 22:59:45
+New LOGIN message from client 2020-12-04 22:59:45
+Client successfully login as: petr 2020-12-04 22:59:45
+Making client thread. 2020-12-04 22:59:45
+New client connection 2020-12-04 23:01:20
+Client message accepted 2020-12-04 23:01:20
+New LOGIN message from client 2020-12-04 23:01:20
+Client successfully login as: petr 2020-12-04 23:01:20
+Making client thread. 2020-12-04 23:01:20
+New client connection 2020-12-04 23:01:53
+Client message accepted 2020-12-04 23:01:53
+New LOGIN message from client 2020-12-04 23:01:53
+Client successfully login as: petr 2020-12-04 23:01:53
+Making client thread. 2020-12-04 23:01:53
+New client connection 2020-12-04 23:02:29
+Client message accepted 2020-12-04 23:02:29
+New LOGIN message from client 2020-12-04 23:02:29
+Client successfully login as: pattis 2020-12-04 23:02:29
+Making client thread. 2020-12-04 23:02:29
+New client connection 2020-12-04 23:03:18
+Client message accepted 2020-12-04 23:03:18
+New LOGIN message from client 2020-12-04 23:03:18
+Client successfully login as: petr 2020-12-04 23:03:18
+Making client thread. 2020-12-04 23:03:18
+New client connection 2020-12-04 23:03:20
+Client message accepted 2020-12-04 23:03:20
+New LOGIN message from client 2020-12-04 23:03:20
+Client successfully login as: pattis 2020-12-04 23:03:20
+Making client thread. 2020-12-04 23:03:20
+New client connection 2020-12-04 23:12:25
+Client message accepted 2020-12-04 23:12:25
+New LOGIN message from client 2020-12-04 23:12:25
+Client successfully login as: petr 2020-12-04 23:12:25
+Making client thread. 2020-12-04 23:12:25
+New client connection 2020-12-04 23:16:57
+Client message accepted 2020-12-04 23:16:57
+New LOGIN message from client 2020-12-04 23:16:57
+Client successfully login as: petr 2020-12-04 23:16:57
+Making client thread. 2020-12-04 23:16:57
+New client connection 2020-12-04 23:17:58
+Client message accepted 2020-12-04 23:17:58
+New LOGIN message from client 2020-12-04 23:17:58
+Client successfully login as: petr 2020-12-04 23:17:58
+Making client thread. 2020-12-04 23:17:58
+New client connection 2020-12-04 23:18:28
+Client message accepted 2020-12-04 23:18:28
+New LOGIN message from client 2020-12-04 23:18:28
+Client successfully login as: petr 2020-12-04 23:18:28
+Making client thread. 2020-12-04 23:18:28
+New client connection 2020-12-04 23:19:05
+Client message accepted 2020-12-04 23:19:05
+New LOGIN message from client 2020-12-04 23:19:05
+Client successfully login as: petr 2020-12-04 23:19:05
+Making client thread. 2020-12-04 23:19:05
+New client connection 2020-12-04 23:23:50
+Client message accepted 2020-12-04 23:23:50
+New LOGIN message from client 2020-12-04 23:23:50
+Client successfully login as: petr 2020-12-04 23:23:50
+Making client thread. 2020-12-04 23:23:50
+New client connection 2020-12-04 23:24:02
+Client message accepted 2020-12-04 23:24:02
+New LOGIN message from client 2020-12-04 23:24:02
+Client successfully login as: pattis 2020-12-04 23:24:02
+Making client thread. 2020-12-04 23:24:02
+New client connection 2020-12-04 23:24:45
+Client message accepted 2020-12-04 23:24:45
+New LOGIN message from client 2020-12-04 23:24:45
+Client successfully login as: petr 2020-12-04 23:24:45
+Making client thread. 2020-12-04 23:24:45
+New client connection 2020-12-04 23:25:04
+Client message accepted 2020-12-04 23:25:04
+New LOGIN message from client 2020-12-04 23:25:04
+Client successfully login as: petr 2020-12-04 23:25:04
+Making client thread. 2020-12-04 23:25:04
+New client connection 2020-12-04 23:26:47
+Client message accepted 2020-12-04 23:26:47
+New LOGIN message from client 2020-12-04 23:26:47
+Client successfully login as: petr 2020-12-04 23:26:47
+Making client thread. 2020-12-04 23:26:47
+New client connection 2020-12-04 23:27:24
+Client message accepted 2020-12-04 23:27:24
+New LOGIN message from client 2020-12-04 23:27:24
+Client successfully login as: petr 2020-12-04 23:27:24
+Making client thread. 2020-12-04 23:27:24
+New client connection 2020-12-04 23:27:29
+Client message accepted 2020-12-04 23:27:29
+New LOGIN message from client 2020-12-04 23:27:29
+Client successfully login as: pattis 2020-12-04 23:27:29
+Making client thread. 2020-12-04 23:27:29
+New client connection 2020-12-04 23:28:29
+Client message accepted 2020-12-04 23:28:29
+New LOGIN message from client 2020-12-04 23:28:29
+Client successfully login as: petr 2020-12-04 23:28:29
+Making client thread. 2020-12-04 23:28:29
+New client connection 2020-12-04 23:28:42
+Client message accepted 2020-12-04 23:28:42
+New LOGIN message from client 2020-12-04 23:28:42
+Client successfully login as: pattis 2020-12-04 23:28:42
+Making client thread. 2020-12-04 23:28:42
+New client connection 2020-12-04 23:31:53
+Client message accepted 2020-12-04 23:31:53
+New LOGIN message from client 2020-12-04 23:31:53
+Client successfully login as: petr 2020-12-04 23:31:53
+Making client thread. 2020-12-04 23:31:53
+New client connection 2020-12-04 23:32:50
+Client message accepted 2020-12-04 23:32:50
+New LOGIN message from client 2020-12-04 23:32:50
+Client successfully login as: petr 2020-12-04 23:32:50
+Making client thread. 2020-12-04 23:32:50
+New client connection 2020-12-04 23:32:52
+Client message accepted 2020-12-04 23:32:52
+New LOGIN message from client 2020-12-04 23:32:52
+Client successfully login as: pattis 2020-12-04 23:32:52
+Making client thread. 2020-12-04 23:32:52
+New client connection 2020-12-04 23:33:49
+Client message accepted 2020-12-04 23:33:49
+New LOGIN message from client 2020-12-04 23:33:49
+Client successfully login as: petr 2020-12-04 23:33:49
+Making client thread. 2020-12-04 23:33:49
+New client connection 2020-12-04 23:33:53
+Client message accepted 2020-12-04 23:33:53
+New LOGIN message from client 2020-12-04 23:33:53
+Client rejected because username already exists
+ 2020-12-04 23:33:53
+New client connection 2020-12-04 23:34:10
+Client message accepted 2020-12-04 23:34:10
+New LOGIN message from client 2020-12-04 23:34:10
+Client rejected because username already exists
+ 2020-12-04 23:34:10
+New client connection 2020-12-04 23:34:13
+Client message accepted 2020-12-04 23:34:13
+New LOGIN message from client 2020-12-04 23:34:13
+Client successfully login as: pattis 2020-12-04 23:34:13
+Making client thread. 2020-12-04 23:34:13
+New client connection 2020-12-04 23:38:28
+Client message accepted 2020-12-04 23:38:28
+New LOGIN message from client 2020-12-04 23:38:28
+Client successfully login as: pattis 2020-12-04 23:38:28
+Making client thread. 2020-12-04 23:38:28
+New client connection 2020-12-04 23:38:39
+Client message accepted 2020-12-04 23:38:39
+New LOGIN message from client 2020-12-04 23:38:39
+Client rejected because username already exists
+ 2020-12-04 23:38:39
+New client connection 2020-12-04 23:38:45
+Client message accepted 2020-12-04 23:38:45
+New LOGIN message from client 2020-12-04 23:38:45
+Client successfully login as: petr 2020-12-04 23:38:45
+Making client thread. 2020-12-04 23:38:45
+New client connection 2020-12-04 23:40:21
+Client message accepted 2020-12-04 23:40:21
+New LOGIN message from client 2020-12-04 23:40:21
+Client successfully login as: pattis 2020-12-04 23:40:21
+Making client thread. 2020-12-04 23:40:21
+New client connection 2020-12-04 23:40:56
+Client message accepted 2020-12-04 23:40:56
+New LOGIN message from client 2020-12-04 23:40:56
+Client successfully login as: pattis 2020-12-04 23:40:56
+Making client thread. 2020-12-04 23:40:56
+New client connection 2020-12-04 23:41:01
+Client message accepted 2020-12-04 23:41:01
+New LOGIN message from client 2020-12-04 23:41:01
+Client successfully login as: petr 2020-12-04 23:41:01
+Making client thread. 2020-12-04 23:41:01
+New client connection 2020-12-04 23:42:32
+Client message accepted 2020-12-04 23:42:32
+New LOGIN message from client 2020-12-04 23:42:32
+Client successfully login as: pattis 2020-12-04 23:42:32
+Making client thread. 2020-12-04 23:42:32
+New client connection 2020-12-04 23:42:36
+Client message accepted 2020-12-04 23:42:36
+New LOGIN message from client 2020-12-04 23:42:36
+Client successfully login as: petr 2020-12-04 23:42:36
+Making client thread. 2020-12-04 23:42:36
+New client connection 2020-12-04 23:43:36
+Client message accepted 2020-12-04 23:43:36
+New LOGIN message from client 2020-12-04 23:43:36
+Client successfully login as: pattis 2020-12-04 23:43:36
+Making client thread. 2020-12-04 23:43:36
+New client connection 2020-12-04 23:43:41
+Client message accepted 2020-12-04 23:43:41
+New LOGIN message from client 2020-12-04 23:43:41
+Client successfully login as: petr 2020-12-04 23:43:41
+Making client thread. 2020-12-04 23:43:41
+New client connection 2020-12-04 23:45:19
+Client message accepted 2020-12-04 23:45:19
+New LOGIN message from client 2020-12-04 23:45:19
+Client successfully login as: pattis 2020-12-04 23:45:19
+Making client thread. 2020-12-04 23:45:19
+New client connection 2020-12-04 23:45:23
+Client message accepted 2020-12-04 23:45:23
+New LOGIN message from client 2020-12-04 23:45:23
+Client successfully login as: petr 2020-12-04 23:45:23
+Making client thread. 2020-12-04 23:45:23
+New client connection 2020-12-04 23:53:30
+Client message accepted 2020-12-04 23:53:30
+New LOGIN message from client 2020-12-04 23:53:30
+Client successfully login as: pattis 2020-12-04 23:53:30
+Making client thread. 2020-12-04 23:53:30
+New client connection 2020-12-04 23:53:37
+Client message accepted 2020-12-04 23:53:37
+New LOGIN message from client 2020-12-04 23:53:37
+Client successfully login as: petr 2020-12-04 23:53:37
+Making client thread. 2020-12-04 23:53:37
+New client connection 2020-12-04 23:57:20
+Client message accepted 2020-12-04 23:57:20
+New LOGIN message from client 2020-12-04 23:57:20
+Client successfully login as: pattis 2020-12-04 23:57:20
+Making client thread. 2020-12-04 23:57:20
+New client connection 2020-12-05 00:15:26
+Client message accepted 2020-12-05 00:15:26
+New LOGIN message from client 2020-12-05 00:15:26
+Client successfully login as: pattis 2020-12-05 00:15:26
+Making client thread. 2020-12-05 00:15:26
+New client connection 2020-12-05 00:15:47
+Client message accepted 2020-12-05 00:15:47
+New LOGIN message from client 2020-12-05 00:15:47
+Client successfully login as: petr 2020-12-05 00:15:47
+Making client thread. 2020-12-05 00:15:47
+New client connection 2020-12-05 00:21:36
+Client message accepted 2020-12-05 00:21:36
+New LOGIN message from client 2020-12-05 00:21:36
+Client successfully login as: pattis 2020-12-05 00:21:36
+Making client thread. 2020-12-05 00:21:36
+New client connection 2020-12-05 00:21:42
+Client message accepted 2020-12-05 00:21:42
+New LOGIN message from client 2020-12-05 00:21:42
+Client successfully login as: petr 2020-12-05 00:21:42
+Making client thread. 2020-12-05 00:21:42
+New client connection 2020-12-05 00:29:30
+Client message accepted 2020-12-05 00:29:30
+New LOGIN message from client 2020-12-05 00:29:30
+Client successfully login as: pattis 2020-12-05 00:29:30
+Making client thread. 2020-12-05 00:29:30
+New client connection 2020-12-05 00:29:34
+Client message accepted 2020-12-05 00:29:34
+New LOGIN message from client 2020-12-05 00:29:34
+Client successfully login as: petr 2020-12-05 00:29:34
+Making client thread. 2020-12-05 00:29:34
+New client connection 2020-12-05 00:29:59
+Client message accepted 2020-12-05 00:29:59
+New LOGIN message from client 2020-12-05 00:29:59
+Client rejected because username already exists
+ 2020-12-05 00:29:59
+New client connection 2020-12-05 00:35:08
+Client message accepted 2020-12-05 00:35:08
+New LOGIN message from client 2020-12-05 00:35:08
+Client successfully login as: pattis 2020-12-05 00:35:08
+Making client thread. 2020-12-05 00:35:08
+New client connection 2020-12-05 00:35:28
+Client message accepted 2020-12-05 00:35:28
+New LOGIN message from client 2020-12-05 00:35:28
+Client successfully login as: pattis 2020-12-05 00:35:28
+Making client thread. 2020-12-05 00:35:28
+New client connection 2020-12-05 00:35:58
+Client message accepted 2020-12-05 00:35:58
+New LOGIN message from client 2020-12-05 00:35:58
+Client successfully login as: pattis 2020-12-05 00:35:58
+Making client thread. 2020-12-05 00:35:58
+New client connection 2020-12-05 00:36:45
+Client message accepted 2020-12-05 00:36:45
+New LOGIN message from client 2020-12-05 00:36:45
+Client successfully login as: pattis 2020-12-05 00:36:45
+Making client thread. 2020-12-05 00:36:45
+New client connection 2020-12-05 00:37:04
+Client message accepted 2020-12-05 00:37:04
+New LOGIN message from client 2020-12-05 00:37:04
+Client successfully login as: pattis 2020-12-05 00:37:04
+Making client thread. 2020-12-05 00:37:04
+New client connection 2020-12-05 00:37:27
+Client message accepted 2020-12-05 00:37:27
+New LOGIN message from client 2020-12-05 00:37:27
+Client successfully login as: pattis 2020-12-05 00:37:27
+Making client thread. 2020-12-05 00:37:27
+New client connection 2020-12-05 00:37:31
+Client message accepted 2020-12-05 00:37:31
+New LOGIN message from client 2020-12-05 00:37:31
+Client successfully login as: petr 2020-12-05 00:37:31
+Making client thread. 2020-12-05 00:37:31
+New client connection 2020-12-05 00:38:15
+Client message accepted 2020-12-05 00:38:15
+New LOGIN message from client 2020-12-05 00:38:15
+Client successfully login as: pattis 2020-12-05 00:38:15
+Making client thread. 2020-12-05 00:38:15
+New client connection 2020-12-05 00:38:18
+Client message accepted 2020-12-05 00:38:18
+New LOGIN message from client 2020-12-05 00:38:18
+Client successfully login as: petr 2020-12-05 00:38:18
+Making client thread. 2020-12-05 00:38:18
+New client connection 2020-12-05 00:39:00
+Client message accepted 2020-12-05 00:39:00
+New LOGIN message from client 2020-12-05 00:39:00
+Client successfully login as: pattis 2020-12-05 00:39:00
+Making client thread. 2020-12-05 00:39:00
+New client connection 2020-12-05 00:39:03
+Client message accepted 2020-12-05 00:39:03
+New LOGIN message from client 2020-12-05 00:39:03
+Client successfully login as: petr 2020-12-05 00:39:03
+Making client thread. 2020-12-05 00:39:03
+New client connection 2020-12-05 00:40:44
+Client message accepted 2020-12-05 00:40:44
+New LOGIN message from client 2020-12-05 00:40:44
+Client successfully login as: pattis 2020-12-05 00:40:44
+Making client thread. 2020-12-05 00:40:44
+New client connection 2020-12-05 00:40:49
+Client message accepted 2020-12-05 00:40:49
+New LOGIN message from client 2020-12-05 00:40:49
+Client successfully login as: petr 2020-12-05 00:40:49
+Making client thread. 2020-12-05 00:40:49
+New client connection 2020-12-05 00:41:55
+Client message accepted 2020-12-05 00:41:55
+New LOGIN message from client 2020-12-05 00:41:55
+Client successfully login as: pattis 2020-12-05 00:41:55
+Making client thread. 2020-12-05 00:41:55
+New client connection 2020-12-05 00:42:03
+Client message accepted 2020-12-05 00:42:03
+New LOGIN message from client 2020-12-05 00:42:03
+Client successfully login as: pattis 2020-12-05 00:42:03
+Making client thread. 2020-12-05 00:42:03
+New client connection 2020-12-05 00:42:05
+Client message accepted 2020-12-05 00:42:05
+New LOGIN message from client 2020-12-05 00:42:05
+Client successfully login as: petr 2020-12-05 00:42:05
+Making client thread. 2020-12-05 00:42:05
+New client connection 2020-12-05 00:42:18
+Client message accepted 2020-12-05 00:42:18
+New LOGIN message from client 2020-12-05 00:42:18
+Client successfully login as: pattis 2020-12-05 00:42:18
+Making client thread. 2020-12-05 00:42:18
+New client connection 2020-12-05 00:42:43
+Client message accepted 2020-12-05 00:42:43
+New LOGIN message from client 2020-12-05 00:42:43
+Client successfully login as: pattis 2020-12-05 00:42:43
+Making client thread. 2020-12-05 00:42:43
+New client connection 2020-12-05 00:42:46
+Client message accepted 2020-12-05 00:42:46
+New LOGIN message from client 2020-12-05 00:42:46
+Client successfully login as: petr 2020-12-05 00:42:46
+Making client thread. 2020-12-05 00:42:46
+New client connection 2020-12-05 00:44:16
+Client message accepted 2020-12-05 00:44:16
+New LOGIN message from client 2020-12-05 00:44:16
+Client successfully login as: pattis 2020-12-05 00:44:16
+Making client thread. 2020-12-05 00:44:16
+New client connection 2020-12-05 00:44:20
+Client message accepted 2020-12-05 00:44:20
+New LOGIN message from client 2020-12-05 00:44:20
+Client successfully login as: petr 2020-12-05 00:44:20
+Making client thread. 2020-12-05 00:44:20
+New client connection 2020-12-05 00:44:59
+Client message accepted 2020-12-05 00:44:59
+New LOGIN message from client 2020-12-05 00:44:59
+Client successfully login as: pattis 2020-12-05 00:44:59
+Making client thread. 2020-12-05 00:44:59
+New client connection 2020-12-05 00:45:02
+Client message accepted 2020-12-05 00:45:02
+New LOGIN message from client 2020-12-05 00:45:02
+Client successfully login as: petr 2020-12-05 00:45:02
+Making client thread. 2020-12-05 00:45:02
+New client connection 2020-12-05 00:47:41
+Client message accepted 2020-12-05 00:47:41
+New LOGIN message from client 2020-12-05 00:47:41
+Client successfully login as: pattis 2020-12-05 00:47:41
+Making client thread. 2020-12-05 00:47:41
+New client connection 2020-12-05 00:47:49
+Client message accepted 2020-12-05 00:47:49
+New LOGIN message from client 2020-12-05 00:47:49
+Client successfully login as: petr 2020-12-05 00:47:49
+Making client thread. 2020-12-05 00:47:49
+New client connection 2020-12-05 00:50:51
+Client message accepted 2020-12-05 00:50:51
+New LOGIN message from client 2020-12-05 00:50:51
+Client successfully login as: pattis 2020-12-05 00:50:51
+Making client thread. 2020-12-05 00:50:51
+New client connection 2020-12-05 00:50:57
+Client message accepted 2020-12-05 00:50:57
+New LOGIN message from client 2020-12-05 00:50:57
+Client successfully login as: petr 2020-12-05 00:50:57
+Making client thread. 2020-12-05 00:50:57
+New client connection 2020-12-05 00:51:36
+Client message accepted 2020-12-05 00:51:36
+New LOGIN message from client 2020-12-05 00:51:36
+Client successfully login as: pattis 2020-12-05 00:51:36
+Making client thread. 2020-12-05 00:51:36
+New client connection 2020-12-05 00:51:41
+Client message accepted 2020-12-05 00:51:41
+New LOGIN message from client 2020-12-05 00:51:41
+Client successfully login as: petr 2020-12-05 00:51:41
+Making client thread. 2020-12-05 00:51:41
+New client connection 2020-12-05 00:53:32
+Client message accepted 2020-12-05 00:53:32
+New LOGIN message from client 2020-12-05 00:53:32
+Client successfully login as: pattis 2020-12-05 00:53:32
+Making client thread. 2020-12-05 00:53:32
+New client connection 2020-12-05 00:53:35
+Client message accepted 2020-12-05 00:53:35
+New LOGIN message from client 2020-12-05 00:53:35
+Client successfully login as: petr 2020-12-05 00:53:35
+Making client thread. 2020-12-05 00:53:35
+New client connection 2020-12-05 00:54:38
+Client message accepted 2020-12-05 00:54:38
+New LOGIN message from client 2020-12-05 00:54:38
+Client successfully login as: pattis 2020-12-05 00:54:38
+Making client thread. 2020-12-05 00:54:38
+New client connection 2020-12-05 00:54:47
+Client message accepted 2020-12-05 00:54:47
+New LOGIN message from client 2020-12-05 00:54:47
+Client successfully login as: petr 2020-12-05 00:54:47
+Making client thread. 2020-12-05 00:54:47
+New client connection 2020-12-05 00:55:28
+Client message accepted 2020-12-05 00:55:28
+New LOGIN message from client 2020-12-05 00:55:28
+Client successfully login as: pattis 2020-12-05 00:55:28
+Making client thread. 2020-12-05 00:55:28
+New client connection 2020-12-05 00:55:44
+Client message accepted 2020-12-05 00:55:44
+New LOGIN message from client 2020-12-05 00:55:44
+Client successfully login as: petr 2020-12-05 00:55:44
+Making client thread. 2020-12-05 00:55:44
+New client connection 2020-12-05 00:57:02
+Client message accepted 2020-12-05 00:57:02
+New LOGIN message from client 2020-12-05 00:57:02
+Client successfully login as: pattis 2020-12-05 00:57:02
+Making client thread. 2020-12-05 00:57:02
+New client connection 2020-12-05 00:57:10
+Client message accepted 2020-12-05 00:57:10
+New LOGIN message from client 2020-12-05 00:57:10
+Client successfully login as: petr 2020-12-05 00:57:10
+Making client thread. 2020-12-05 00:57:10
+New client connection 2020-12-05 00:59:07
+Client message accepted 2020-12-05 00:59:07
+New LOGIN message from client 2020-12-05 00:59:07
+Client successfully login as: pattis 2020-12-05 00:59:07
+Making client thread. 2020-12-05 00:59:07
+New client connection 2020-12-05 00:59:16
+Client message accepted 2020-12-05 00:59:16
+New LOGIN message from client 2020-12-05 00:59:16
+Client successfully login as: petr 2020-12-05 00:59:16
+Making client thread. 2020-12-05 00:59:16
+New client connection 2020-12-05 01:03:58
+Client message accepted 2020-12-05 01:03:58
+New LOGIN message from client 2020-12-05 01:03:58
+Client successfully login as: pattis 2020-12-05 01:03:58
+Making client thread. 2020-12-05 01:03:58
+New client connection 2020-12-05 01:04:01
+Client message accepted 2020-12-05 01:04:01
+New LOGIN message from client 2020-12-05 01:04:01
+Client successfully login as: petr 2020-12-05 01:04:01
+Making client thread. 2020-12-05 01:04:01
+New client connection 2020-12-05 01:05:17
+Client message accepted 2020-12-05 01:05:17
+New LOGIN message from client 2020-12-05 01:05:17
+Client successfully login as: petr 2020-12-05 01:05:17
+Making client thread. 2020-12-05 01:05:17
+New client connection 2020-12-05 01:05:40
+Client message accepted 2020-12-05 01:05:40
+New LOGIN message from client 2020-12-05 01:05:40
+Client successfully login as: pattis 2020-12-05 01:05:40
+Making client thread. 2020-12-05 01:05:40
+New client connection 2020-12-05 01:07:56
+Client message accepted 2020-12-05 01:07:56
+New LOGIN message from client 2020-12-05 01:07:56
+Client successfully login as: petr 2020-12-05 01:07:56
+Making client thread. 2020-12-05 01:07:56
+New client connection 2020-12-05 01:08:03
+Client message accepted 2020-12-05 01:08:03
+New LOGIN message from client 2020-12-05 01:08:03
+Client successfully login as: pattis 2020-12-05 01:08:03
+Making client thread. 2020-12-05 01:08:03
+New client connection 2020-12-05 01:08:49
+Client message accepted 2020-12-05 01:08:49
+New LOGIN message from client 2020-12-05 01:08:49
+Client successfully login as: petr 2020-12-05 01:08:49
+Making client thread. 2020-12-05 01:08:49
+New client connection 2020-12-05 01:08:51
+Client message accepted 2020-12-05 01:08:51
+New LOGIN message from client 2020-12-05 01:08:51
+Client successfully login as: pattis 2020-12-05 01:08:51
+Making client thread. 2020-12-05 01:08:51
+New client connection 2020-12-05 01:10:00
+Client message accepted 2020-12-05 01:10:00
+New LOGIN message from client 2020-12-05 01:10:00
+Client successfully login as: petr 2020-12-05 01:10:00
+Making client thread. 2020-12-05 01:10:00
+New client connection 2020-12-05 01:10:03
+Client message accepted 2020-12-05 01:10:03
+New LOGIN message from client 2020-12-05 01:10:03
+Client successfully login as: pattis 2020-12-05 01:10:03
+Making client thread. 2020-12-05 01:10:03
+New client connection 2020-12-05 01:11:18
+Client message accepted 2020-12-05 01:11:18
+New LOGIN message from client 2020-12-05 01:11:18
+Client successfully login as: petr 2020-12-05 01:11:18
+Making client thread. 2020-12-05 01:11:18
+New client connection 2020-12-05 01:11:20
+Client message accepted 2020-12-05 01:11:20
+New LOGIN message from client 2020-12-05 01:11:20
+Client successfully login as: pattis 2020-12-05 01:11:20
+Making client thread. 2020-12-05 01:11:20
+New client connection 2020-12-05 01:12:40
+Client message accepted 2020-12-05 01:12:40
+New LOGIN message from client 2020-12-05 01:12:40
+Client successfully login as: petr 2020-12-05 01:12:40
+Making client thread. 2020-12-05 01:12:40
+New client connection 2020-12-05 01:12:43
+Client message accepted 2020-12-05 01:12:43
+New LOGIN message from client 2020-12-05 01:12:43
+Client successfully login as: pattis 2020-12-05 01:12:43
+Making client thread. 2020-12-05 01:12:43
+New client connection 2020-12-05 01:14:12
+Client message accepted 2020-12-05 01:14:12
+New LOGIN message from client 2020-12-05 01:14:12
+Client successfully login as: petr 2020-12-05 01:14:12
+Making client thread. 2020-12-05 01:14:12
+New client connection 2020-12-05 01:14:17
+Client message accepted 2020-12-05 01:14:17
+New LOGIN message from client 2020-12-05 01:14:17
+Client successfully login as: pattis 2020-12-05 01:14:17
+Making client thread. 2020-12-05 01:14:17
+New client connection 2020-12-05 01:15:39
+Client message accepted 2020-12-05 01:15:39
+New LOGIN message from client 2020-12-05 01:15:39
+Client successfully login as: petr 2020-12-05 01:15:39
+Making client thread. 2020-12-05 01:15:39
+New client connection 2020-12-05 01:15:41
+Client message accepted 2020-12-05 01:15:41
+New LOGIN message from client 2020-12-05 01:15:41
+Client successfully login as: pattis 2020-12-05 01:15:41
+Making client thread. 2020-12-05 01:15:41
+New client connection 2020-12-05 01:16:02
+Client message accepted 2020-12-05 01:16:02
+New LOGIN message from client 2020-12-05 01:16:02
+Client successfully login as: petr 2020-12-05 01:16:02
+Making client thread. 2020-12-05 01:16:02
+New client connection 2020-12-05 01:16:09
+Client message accepted 2020-12-05 01:16:09
+New LOGIN message from client 2020-12-05 01:16:09
+Client successfully login as: pattis 2020-12-05 01:16:09
+Making client thread. 2020-12-05 01:16:09
+New client connection 2020-12-05 01:17:27
+Client message accepted 2020-12-05 01:17:27
+New LOGIN message from client 2020-12-05 01:17:27
+Client successfully login as: petr 2020-12-05 01:17:27
+Making client thread. 2020-12-05 01:17:27
+New client connection 2020-12-05 01:17:31
+Client message accepted 2020-12-05 01:17:31
+New LOGIN message from client 2020-12-05 01:17:31
+Client successfully login as: pattis 2020-12-05 01:17:31
+Making client thread. 2020-12-05 01:17:31
+New client connection 2020-12-05 01:18:58
+Client message accepted 2020-12-05 01:18:58
+New LOGIN message from client 2020-12-05 01:18:58
+Client successfully login as: petr 2020-12-05 01:18:58
+Making client thread. 2020-12-05 01:18:58
+New client connection 2020-12-05 01:19:04
+Client message accepted 2020-12-05 01:19:04
+New LOGIN message from client 2020-12-05 01:19:04
+Client successfully login as: pattis 2020-12-05 01:19:04
+Making client thread. 2020-12-05 01:19:04
+New client connection 2020-12-05 01:28:28
+Client message accepted 2020-12-05 01:28:28
+No LOGIN message from client. 2020-12-05 01:28:28
+New client connection 2020-12-05 01:28:37
+Client message accepted 2020-12-05 01:28:37
+No LOGIN message from client. 2020-12-05 01:28:37
+New client connection 2020-12-05 01:29:04
+Client message accepted 2020-12-05 01:29:04
+No LOGIN message from client. 2020-12-05 01:29:04
+New client connection 2020-12-05 01:29:41
+Client message accepted 2020-12-05 01:29:41
+New LOGIN message from client 2020-12-05 01:29:41
+Client successfully login as: petr 2020-12-05 01:29:41
+Making client thread. 2020-12-05 01:29:41
+New client connection 2020-12-05 01:29:44
+Client message accepted 2020-12-05 01:29:44
+New LOGIN message from client 2020-12-05 01:29:44
+Client rejected because username already exists
+ 2020-12-05 01:29:44
+New client connection 2020-12-05 01:29:53
+Client message accepted 2020-12-05 01:29:53
+New LOGIN message from client 2020-12-05 01:29:53
+Client successfully login as: pattis 2020-12-05 01:29:53
+Making client thread. 2020-12-05 01:29:53
