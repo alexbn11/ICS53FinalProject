@@ -15,7 +15,7 @@ typedef struct User {
 typedef struct Room {
     char *roomName;
     char *host;
-    List_t allUsers;
+    List_t allUsers; // maybe make this char **
 } room_t;
 
 // Holds Job information
@@ -27,9 +27,13 @@ typedef struct Job {
 
 char *getUserList(List_t *list, int client);
 void printUserList(List_t* list);
-user_t *findUser(List_t *list, char* n);
+user_t *findUserByName(List_t *list, char* name);
+user_t *findUserByFd(List_t *list, int fd);
 void removeUser(List_t *list, char *name);
+char *getUserFromSent(char *body);
+char *getMessageFromSent(char *body);
 void cleanUsers(List_t *list);
+void cleanJob(job_t *job);
 void cleanRooms(List_t *list);
 
 #endif

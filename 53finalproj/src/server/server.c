@@ -15,6 +15,7 @@ int reqcnt = 0;
 
 
 pthread_mutex_t job_lock;
+pthread_mutex_t send_lock;
 
 int total_num_msg = 0;
 int listen_fd;
@@ -54,7 +55,7 @@ void readFromAudit(){
 
 void clearAuditLog(){
     FILE *fp;
-    fp = fopen(auditLog,"w");
+    fp = fopen(auditLog, "w");
     fclose(fp);
 }
 
@@ -128,21 +129,55 @@ void *job_thread(void *threadId){
     tid = (long)threadId;
     
     printf("Job thread created! Thread ID, %ld\n", tid);
+    pthread_detach(pthread_self());
     while (1) {
         pthread_mutex_lock(&job_lock);
         if (jobs->length > 0) {
             job_t *currJob = (job_t *) removeFront(jobs);
             printf("Protocol: %d\n", currJob->protocol);
             if (currJob->protocol == USRLIST) {
-                int client_fd = currJob->client;
-                char *payload = getUserList(users, client_fd);
-                size_t size = 0;
-                if (payload != NULL) {
-                    size = sizeof(payload);
-                }
+                char *payload = getUserList(users, currJob->client);
+                uint32_t size = 0;
+
+                if (payload != NULL) 
+                    size = strlen(payload) + 1;
+
                 petr_header res = {size, USRLIST};
-                wr_msg(client_fd, &res, payload);
+                wr_msg(currJob->client, &res, payload);
+
+                if (payload != NULL) {
+                    free(payload);
+                }
             }
+            else if (currJob->protocol == USRSEND) {
+                user_t *fromUser = findUserByFd(users, currJob->client);
+
+                char *receiver = getUserFromSent(currJob->data);
+                user_t *toUser = findUserByName(users, receiver);
+                if (toUser != NULL && toUser->fd != currJob->client) {
+                    char *message = getMessageFromSent(currJob->data);
+
+                    char* recvMessage = calloc(strlen(fromUser->name) + 2 + strlen(message), strlen(fromUser->name) + 2 + strlen(message));
+                    strcpy(recvMessage, fromUser->name);
+                    strcat(recvMessage, "\r\n");
+                    strcat(recvMessage, message);
+
+                    uint32_t size = strlen(recvMessage) + 1;
+                    petr_header sentMessage = {size, USRRECV};
+                    wr_msg(toUser->fd, &sentMessage, recvMessage);
+
+                    petr_header res = {0, OK};
+                    wr_msg(currJob->client, &res, NULL);
+                    
+                    if (recvMessage != NULL)
+                        free(recvMessage);
+                }
+                else {
+                    petr_header res = {0, EUSREXISTS};
+                    wr_msg(currJob->client, &res, NULL);
+                }
+            }
+            cleanJob(currJob);
         }
         pthread_mutex_unlock(&job_lock);
     }
@@ -186,7 +221,7 @@ void *client_thread(void *clientfd) {
         petr_header *petrHeader = (petr_header *) buffer;
         char *messageBody = NULL;
         if (petrHeader->msg_len != 0) {
-            messageBody = malloc(petrHeader->msg_len);
+            messageBody = calloc(petrHeader->msg_len, petrHeader->msg_len);
             memcpy(messageBody, &buffer[8], petrHeader->msg_len);
         }
 
@@ -285,7 +320,11 @@ void run_server(int server_port, int numThreads) {
                 memcpy(name, &buffer[8], req->msg_len);
 
                 // Verify user name
-                if (findUser(users, name) == NULL) { // If username not already taken
+                if (*name == 0) {
+                    petr_header res = {0, ESERV};
+                    wr_msg(*client_fd, &res, buffer);
+                }
+                else if (findUserByName(users, name) == NULL) { // If username not already taken
                     // Add to user list
                     user_t *newUser = malloc(sizeof(user_t));
                     newUser->name = name;
@@ -294,7 +333,7 @@ void run_server(int server_port, int numThreads) {
 
                     // Respond with OK message from server
                     petr_header res = {0, OK};
-                    wr_msg(*client_fd, &res, buffer);
+                    wr_msg(*client_fd, &res, NULL);
 
                     printf("New user online: %s\n", name);
 
@@ -391,6 +430,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    clearAuditLog();
     run_server(port, n);
 
     return 0;

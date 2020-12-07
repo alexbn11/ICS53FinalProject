@@ -4,20 +4,19 @@
 #include "helpers.h"
 #include "linkedList.h"
 
-
 char *getUserList(List_t *list, int client) {
     char *names = NULL;
     node_t *head = list->head;
-    int i = 0;
     while (head != NULL) {
         user_t *user = (user_t *) head->value;
         if (user->fd != client) {
             if (names == NULL) {
-                names = malloc(sizeof(user->name));
-                strcpy(names, user->name);
+                names = calloc(strlen(user->name) + 1, strlen(user->name) + 1);
+                strcat(names, user->name);
                 strcat(names, "\n");
             }
             else {
+                names = realloc(names, strlen(names) + strlen(user->name) + 1);
                 strcat(names, user->name);
                 strcat(names, "\n");
             }
@@ -37,12 +36,25 @@ void printUserList(List_t* list) {
     }
 }
 
-// Finds the user in the given list
-user_t *findUser(List_t *list, char* name) {
+// Finds the user in the given list by their username
+user_t *findUserByName(List_t *list, char* name) {
     node_t *head = list->head;
     while (head != NULL) {
         user_t *user = (user_t *) head->value;
         if (strcmp(user->name, name) == 0) {
+            return user;
+        }
+        head = head->next;
+    }
+    return NULL;
+}
+
+// Finds the user in the given list by their fd
+user_t *findUserByFd(List_t *list, int fd) {
+    node_t *head = list->head;
+    while (head != NULL) {
+        user_t *user = (user_t *) head->value;
+        if (user->fd == fd) {
             return user;
         }
         head = head->next;
@@ -78,11 +90,30 @@ void removeUser(List_t *list, char *name) {
     }
 }
 
+char *getUserFromSent(char *body) {
+    const char delimiter[] = "\r";
+    return strtok(body, delimiter);
+}
+
+char *getMessageFromSent(char *body) {
+    char *message = body;
+    while (*message != '\n') {
+        message += 1;
+    }
+    return message + 1;
+}
+
 // Clean the user list
 void cleanUsers(List_t *list) {
     while (list->head != NULL) {
         removeUser(list, NULL);
     }
+}
+
+void cleanJob(job_t *job) {
+    free(job->data);
+    job->data = NULL;
+    free(job);
 }
 
 // Clean the room list
