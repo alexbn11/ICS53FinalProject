@@ -15,25 +15,43 @@ typedef struct User {
 typedef struct Room {
     char *roomName;
     char *host;
-    List_t allUsers; // maybe make this char **
+    List_t *users; // maybe make this char **
 } room_t;
 
 // Holds Job information
 typedef struct Job {
-    int client;
+    int fd;
     uint8_t protocol;
     char *data;
 } job_t;
 
-char *getUserList(List_t *list, int client);
-void printUserList(List_t* list);
+
+// User methods
 user_t *findUserByName(List_t *list, char* name);
 user_t *findUserByFd(List_t *list, int fd);
 void removeUser(List_t *list, char *name);
+void cleanUsers(List_t *list);
+char *getUserList(List_t *list, int client);
+void printUserList(List_t* list);
+
+// Message methods
 char *getUserFromSent(char *body);
 char *getMessageFromSent(char *body);
-void cleanUsers(List_t *list);
+
+// Job methods
 void cleanJob(job_t *job);
+void cleanJobs(List_t *list);
+
+// Room methods
+void addRoom(List_t *list, char *name, char *host);
+room_t *findRoom(List_t *list, char *name);
+// void joinRoom(room_t *room, char *name);
+room_t *findFirstRoomWithUser(List_t *list, char *user);
+room_t *findUserInRoom(room_t *room, char *user);
+void removeUserFromRoom(room_t *room, char *user);
+void deleteRoom(List_t *list, char *name);
+char *getRoomList(List_t *list);
+void printRooms(List_t *list);
 void cleanRooms(List_t *list);
 
 #endif

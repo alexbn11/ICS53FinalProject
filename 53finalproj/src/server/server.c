@@ -6,7 +6,6 @@
 #include "helpers.h"
 #include <time.h>
 
-
 const char exit_str[] = "exit";
 
 char buffer[BUFFER_SIZE];
@@ -72,6 +71,11 @@ List_t *jobs;
 void sigint_handler(int sig) {
     printf("shutting down server\n");
     cleanUsers(users);
+    free(users);
+    cleanJobs(jobs);
+    free(jobs);
+    cleanRooms(rooms);
+    free(rooms);
     close(listen_fd);
     exit(0);
 }
@@ -123,38 +127,36 @@ int server_init(int server_port) {
 }
 
 // Job thread
-//threadid Don't know yet
 void *job_thread(void *threadId){
     long tid;
     tid = (long)threadId;
     
-    printf("Job thread created! Thread ID, %ld\n", tid);
+    printf("Job thread created!\n");
     pthread_detach(pthread_self());
     while (1) {
         pthread_mutex_lock(&job_lock);
         if (jobs->length > 0) {
             job_t *currJob = (job_t *) removeFront(jobs);
             printf("Protocol: %d\n", currJob->protocol);
-            if (currJob->protocol == USRLIST) {
-                char *payload = getUserList(users, currJob->client);
+            if (currJob->protocol == USRLIST) { // protocol USRLIST (COMPLETE)
+                char *userList = getUserList(users, currJob->fd);
                 uint32_t size = 0;
 
-                if (payload != NULL) 
-                    size = strlen(payload) + 1;
+                if (userList != NULL) 
+                    size = strlen(userList) + 1;
 
                 petr_header res = {size, USRLIST};
-                wr_msg(currJob->client, &res, payload);
+                wr_msg(currJob->fd, &res, userList);
 
-                if (payload != NULL) {
-                    free(payload);
-                }
+                if (userList != NULL)
+                    free(userList);
             }
-            else if (currJob->protocol == USRSEND) {
-                user_t *fromUser = findUserByFd(users, currJob->client);
+            else if (currJob->protocol == USRSEND) { // protocol USRSEND
+                user_t *fromUser = findUserByFd(users, currJob->fd);
 
                 char *receiver = getUserFromSent(currJob->data);
                 user_t *toUser = findUserByName(users, receiver);
-                if (toUser != NULL && toUser->fd != currJob->client) {
+                if (toUser != NULL && toUser->fd != currJob->fd) {
                     char *message = getMessageFromSent(currJob->data);
 
                     char* recvMessage = calloc(strlen(fromUser->name) + 2 + strlen(message), strlen(fromUser->name) + 2 + strlen(message));
@@ -167,22 +169,203 @@ void *job_thread(void *threadId){
                     wr_msg(toUser->fd, &sentMessage, recvMessage);
 
                     petr_header res = {0, OK};
-                    wr_msg(currJob->client, &res, NULL);
+                    wr_msg(currJob->fd, &res, NULL);
                     
                     if (recvMessage != NULL)
                         free(recvMessage);
                 }
                 else {
                     petr_header res = {0, EUSREXISTS};
-                    wr_msg(currJob->client, &res, NULL);
+                    wr_msg(currJob->fd, &res, NULL);
                 }
             }
+            else if (currJob->protocol == RMCREATE) { // protocol RMCREATE
+                char *roomName = calloc(strlen(currJob->data), strlen(currJob->data));
+                strcpy(roomName, currJob->data);
+                
+                if (*roomName == 0) { // checks if null room name (DOESN'T WORK)
+                    petr_header res = {0, ESERV};
+                    wr_msg(currJob->fd, &res, NULL);
+                }
+                else if (findRoom(rooms, roomName) == NULL) {
+                    user_t *user = findUserByFd(users, currJob->fd);
+                    char *host = calloc(strlen(user->name), strlen(user->name));
+                    strcpy(host, user->name);
+                    
+                    addRoom(rooms, roomName, host);
+
+                    petr_header res = {0, OK};
+                    wr_msg(currJob->fd, &res, NULL);
+                }
+                else {
+                    petr_header res = {0, ERMEXISTS};
+                    wr_msg(currJob->fd, &res, NULL);
+                }
+            }
+            else if (currJob->protocol == RMJOIN) { // protocol RMJOIN
+                char *roomName = currJob->data;
+                if (*roomName == 0) { // checks if null room name (DOESN'T WORK)
+                    petr_header res = {0, ESERV};
+                    wr_msg(currJob->fd, &res, NULL);
+                }
+                else {
+                    room_t *room = findRoom(rooms, roomName);
+                    if (room == NULL) {
+                        petr_header res = {0, ERMNOTFOUND};
+                        wr_msg(currJob->fd, &res, NULL);
+                    }
+                    else if (room->users->length + 1 == ROOM_LIMIT) {
+                        petr_header res = {0, ERMFULL};
+                        wr_msg(currJob->fd, &res, NULL);
+                    }
+                    else {
+                        user_t *user = findUserByFd(users, currJob->fd);
+                        if (findUserInRoom(room, user->name) == NULL) {
+                            char *name = calloc(strlen(user->name), strlen(user->name));
+                            strcpy(name, user->name);
+                            insertRear(room->users, name);
+                        }
+                        petr_header res = {0, OK};
+                        wr_msg(currJob->fd, &res, NULL);
+                    }
+                }
+            }
+            else if (currJob->protocol == RMLIST) { // protocol RMLIST
+                char *roomList = getRoomList(rooms);
+                uint32_t size = 0;
+
+                if (roomList != NULL) { // checks if null room name (DOESN'T WORK)
+                    size = strlen(roomList) + 1;
+                }
+
+                petr_header res = {size, RMLIST};
+                wr_msg(currJob->fd, &res, roomList);
+
+                if (roomList != NULL)
+                    free(roomList);
+            }
+            else if (currJob->protocol == RMLEAVE) { // protocol RMLEAVE
+                char *roomName = currJob->data;
+                if (roomName == 0) {
+                    petr_header res = {0, ERMNOTFOUND};
+                    wr_msg(currJob->fd, &res, NULL);
+                }
+                else {
+                    char *requester = findUserByFd(users, currJob->fd)->name;
+                    room_t *room = findRoom(rooms, roomName);
+                    if (room == NULL) {
+                        petr_header res = {0, ERMDENIED};
+                        wr_msg(currJob->fd, &res, NULL);
+                    }
+                    else if (strcmp(requester, room->host) == 0) {
+                        petr_header res = {0, ERMDENIED};
+                        wr_msg(currJob->fd, &res, NULL);
+                    }
+                    else {
+                        removeUserFromRoom(room, requester);
+                        petr_header res = {0, OK};
+                        wr_msg(currJob->fd, &res, NULL);
+                        
+                    }
+                }
+            }
+            else if (currJob->protocol == RMDELETE) { // this doesn't work
+                char *roomName = currJob->data;
+                if (roomName == 0) {
+                    petr_header res = {0, ERMNOTFOUND};
+                    wr_msg(currJob->fd, &res, NULL);
+                }
+                else {
+                    char *requester = findUserByFd(users, currJob->fd)->name;
+                    room_t *room = findRoom(rooms, roomName);
+                    if (room == NULL) {
+                        petr_header res = {0, ERMDENIED};
+                        wr_msg(currJob->fd, &res, NULL);
+                    }
+                    else if (strcmp(requester, room->host) != 0) {
+                        petr_header res = {0, ERMDENIED};
+                        wr_msg(currJob->fd, &res, NULL);
+                    }
+                    else {
+                        node_t *head = room->users->head;
+                        petr_header res = {strlen(roomName), RMCLOSED};
+                        while (head != NULL) {
+                            char *name = head->value;
+                            user_t *currUser = findUserByName(users, name);
+                            wr_msg(currUser->fd, &res, roomName);
+                            head = head->next;
+                        }
+                        deleteRoom(rooms, roomName);
+                        res = (petr_header) {0, OK};
+                        wr_msg(currJob->fd, &res, NULL);
+                    }
+                }
+            }
+            else if (currJob->protocol == RMSEND) {
+                user_t *fromUser = findUserByFd(users, currJob->fd);
+
+                char *roomName = getUserFromSent(currJob->data);
+                room_t *room = findRoom(rooms, roomName);
+                if (room != NULL) {
+                    char *message = getMessageFromSent(currJob->data);
+
+                    char* recvMessage = calloc(strlen(roomName) + strlen(fromUser->name) + 2 + strlen(message), 
+                                               strlen(roomName) + strlen(fromUser->name) + 2 + strlen(message));
+                    strcpy(recvMessage, roomName);
+                    strcat(recvMessage, "\r\n");
+                    strcat(recvMessage, fromUser->name);
+                    strcat(recvMessage, "\r\n");
+                    strcat(recvMessage, message);
+                    printf("%s\n", recvMessage);
+
+                    uint32_t size = strlen(recvMessage) + 1;
+
+                    node_t *head = room->users->head;
+                    petr_header res = {size, RMRECV};
+
+                    if (currJob->fd != findUserByName(users, room->host)->fd) {
+                        wr_msg(findUserByName(users, room->host)->fd, &res, recvMessage);
+                    }
+
+                    while (head != NULL) {
+                        char *name = head->value;
+                        user_t *currUser = findUserByName(users, name);
+                        if (currUser->fd != currJob->fd) {
+                            wr_msg(currUser->fd, &res, recvMessage);
+                        }
+                        head = head->next;
+                    }
+
+                    res = (petr_header) {0, OK};
+                    wr_msg(currJob->fd, &res, NULL);
+                    
+                    if (recvMessage != NULL)
+                        free(recvMessage);
+                }
+                else {
+                    petr_header res = {0, EUSREXISTS};
+                    wr_msg(currJob->fd, &res, NULL);
+                }
+            }
+            // else if (currJob->protocol == LOGOUT) {
+            //     user_t *user = findUserByFd(users, currJob->fd);
+            //     node_t *head = rooms->head;
+            //     while (head != NULL) {
+            //         room_t *room = head->value;
+            //         if (findUserInRoom(room, user->name) != NULL) {
+            //             if 
+            //         }
+
+            //     }
+
+            // }
             cleanJob(currJob);
         }
         pthread_mutex_unlock(&job_lock);
     }
     pthread_exit(NULL);
 }
+
 // Client thread
 void *client_thread(void *clientfd) {
     int client_fd = *(int *)clientfd;
@@ -217,7 +400,7 @@ void *client_thread(void *clientfd) {
             continue;
         }
 
-        //Read MSG from Client
+        // Read MSG from Client
         petr_header *petrHeader = (petr_header *) buffer;
         char *messageBody = NULL;
         if (petrHeader->msg_len != 0) {
@@ -225,16 +408,13 @@ void *client_thread(void *clientfd) {
             memcpy(messageBody, &buffer[8], petrHeader->msg_len);
         }
 
-
-        // printf("Job list: %d\n", jobs->length);
         job_t *job = malloc(sizeof(job_t));
-        job->client = client_fd;
+        job->fd = client_fd;
         job->protocol = petrHeader->msg_type;
         job->data = messageBody;
 
-        //Insert MSG to Job Buffer
+        // Insert MSG to Job Buffer
         insertRear(jobs, job);
-        // printf("Job list: %d\n", jobs->length);
 
         pthread_mutex_lock(&buffer_lock);
         reqcnt -= 1;
@@ -320,9 +500,9 @@ void run_server(int server_port, int numThreads) {
                 memcpy(name, &buffer[8], req->msg_len);
 
                 // Verify user name
-                if (*name == 0) {
+                if (*name == 0) { // checks if null user name (DOESN'T WORK)
                     petr_header res = {0, ESERV};
-                    wr_msg(*client_fd, &res, buffer);
+                    wr_msg(*client_fd, &res, NULL);
                 }
                 else if (findUserByName(users, name) == NULL) { // If username not already taken
                     // Add to user list
@@ -357,7 +537,7 @@ void run_server(int server_port, int numThreads) {
 
                     // Reject login
                     petr_header res = {0, EUSREXISTS};
-                    wr_msg(*client_fd, &res, buffer);
+                    wr_msg(*client_fd, &res, NULL);
 
                     // Close connection
                     close(*client_fd);

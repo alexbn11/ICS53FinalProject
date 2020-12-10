@@ -1,3 +1,10 @@
-New client connection 2020-12-07 04:00:34
-Client message accepted 2020-12-07 04:00:34
-New LOGIN message from client 2020-12-07 04:00:34
+New client connection 2020-12-09 23:41:08
+Client message accepted 2020-12-09 23:41:08
+New LOGIN message from client 2020-12-09 23:41:08
+Client successfully login as: petr 2020-12-09 23:41:08
+Making client thread. 2020-12-09 23:41:08
+New client connection 2020-12-09 23:41:09
+Client message accepted 2020-12-09 23:41:09
+New LOGIN message from client 2020-12-09 23:41:09
+Client successfully login as: pattis 2020-12-09 23:41:09
+Making client thread. 2020-12-09 23:41:09
