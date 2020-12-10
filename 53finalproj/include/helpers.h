@@ -27,6 +27,7 @@ typedef struct Job {
 
 
 // User methods
+void addUser(List_t *list, char *name, int fileDescriptor);
 user_t *findUserByName(List_t *list, char* name);
 user_t *findUserByFd(List_t *list, int fd);
 void removeUser(List_t *list, char *name);
@@ -39,6 +40,7 @@ char *getUserFromSent(char *body);
 char *getMessageFromSent(char *body);
 
 // Job methods
+void addJob(List_t *list, int fileDescriptor, u_int8_t protocol, char *data);
 void cleanJob(job_t *job);
 void cleanJobs(List_t *list);
 

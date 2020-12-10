@@ -9,16 +9,23 @@
  * User methods
  *
  */
-void addUser(List_t *list, char *name, int fileDescriptor) {
-
+void addUser(List_t *list, char *name, int fileDescriptor)
+{
+    user_t *newUser = malloc(sizeof(user_t));
+    newUser->name = name;
+    newUser->fd = fileDescriptor;
+    insertRear(list, newUser);
 }
 
 // HELPER: Finds the user in the given list by their username
-user_t *findUserByName(List_t *list, char* name) {
+user_t *findUserByName(List_t *list, char *name)
+{
     node_t *head = list->head;
-    while (head != NULL) {
-        user_t *user = (user_t *) head->value;
-        if (strcmp(user->name, name) == 0) {
+    while (head != NULL)
+    {
+        user_t *user = (user_t *)head->value;
+        if (strcmp(user->name, name) == 0)
+        {
             return user;
         }
         head = head->next;
@@ -27,11 +34,14 @@ user_t *findUserByName(List_t *list, char* name) {
 }
 
 // Finds the user in the given list by their fd
-user_t *findUserByFd(List_t *list, int fd) {
+user_t *findUserByFd(List_t *list, int fd)
+{
     node_t *head = list->head;
-    while (head != NULL) {
-        user_t *user = (user_t *) head->value;
-        if (user->fd == fd) {
+    while (head != NULL)
+    {
+        user_t *user = (user_t *)head->value;
+        if (user->fd == fd)
+        {
             return user;
         }
         head = head->next;
@@ -40,25 +50,32 @@ user_t *findUserByFd(List_t *list, int fd) {
 }
 
 // Remove user from linked list
-void removeUser(List_t *list, char *name) {
-    if (name == NULL) {
-        user_t *user = (user_t *) removeFront(list);
+void removeUser(List_t *list, char *name)
+{
+    if (name == NULL)
+    {
+        user_t *user = (user_t *)removeFront(list);
         free(user->name);
         close(user->fd);
         free(user);
     }
-    else {
+    else
+    {
         int index = 0;
         node_t *head = list->head;
-        while (head != NULL) {
-            user_t *user = (user_t *) head->value;
-            if (strcmp(user->name, name) == 0) {
+        while (head != NULL)
+        {
+            user_t *user = (user_t *)head->value;
+            if (strcmp(user->name, name) == 0)
+            {
                 removeByIndex(list, index);
                 free(user->name);
                 close(user->fd);
                 free(user);
+                return;
             }
-            else {
+            else
+            {
                 index += 1;
                 head = head->next;
             }
@@ -67,21 +84,28 @@ void removeUser(List_t *list, char *name) {
 }
 
 // Free a user from the the user list
-void cleanUsers(List_t *list) {
-    while (list->head != NULL) {
+void cleanUsers(List_t *list)
+{
+    while (list->head != NULL)
+    {
         removeUser(list, NULL);
     }
 }
 
 // Protcool USRLIST
-char *getUserList(List_t *list, int client) {
+char *getUserList(List_t *list, int client)
+{
     char *names = NULL;
     node_t *head = list->head;
-    while (head != NULL) {
-        user_t *user = (user_t *) head->value;
-        if (user->fd != client) {
-            if (names == NULL) {
-                names = calloc(strlen(user->name) + 1, strlen(user->name) + 1);;
+    while (head != NULL)
+    {
+        user_t *user = (user_t *)head->value;
+        if (user->fd != client)
+        {
+            if (names == NULL)
+            {
+                names = calloc(strlen(user->name) + 1, strlen(user->name) + 1);
+                ;
             }
             strcat(names, user->name);
             strcat(names, "\n");
@@ -92,11 +116,13 @@ char *getUserList(List_t *list, int client) {
 }
 
 // Prints list of all users on the server side
-void printUserList(List_t* list) {
+void printUserList(List_t *list)
+{
     node_t *head = list->head;
     printf("Online users:\n");
-    while (head != NULL) {
-        user_t *user = (user_t *) head->value;
+    while (head != NULL)
+    {
+        user_t *user = (user_t *)head->value;
         printf("%s %d\n", user->name, user->fd);
         head = head->next;
     }
@@ -108,15 +134,18 @@ void printUserList(List_t* list) {
  *
  */
 // Gets user from USRSEND
-char *getUserFromSent(char *body) {
+char *getUserFromSent(char *body)
+{
     const char delimiter[] = "\r";
     return strtok(body, delimiter);
 }
 
 // Gets message from USRSEND
-char *getMessageFromSent(char *body) {
+char *getMessageFromSent(char *body)
+{
     char *message = body;
-    while (*message != '\n') {
+    while (*message != '\n')
+    {
         message += 1;
     }
     return message + 1;
@@ -128,20 +157,33 @@ char *getMessageFromSent(char *body) {
  *
  */
 
+void addJob(List_t *list, int fileDescriptor, u_int8_t protocol, char *data)
+{
+    job_t *job = malloc(sizeof(job_t));
+    job->fd = fileDescriptor;
+    job->protocol = protocol;
+    job->data = data;
+
+    // Insert MSG to Job Buffer
+    insertRear(list, job);
+}
+
 // Free a job
-void cleanJob(job_t *job) {
+void cleanJob(job_t *job)
+{
     if (job->data != NULL)
         free(job->data);
     free(job);
 }
 
-void cleanJobs(List_t *list) {
-    while (list->head != NULL) {
-        job_t *job = (job_t *) removeFront(list);
+void cleanJobs(List_t *list)
+{
+    while (list->head != NULL)
+    {
+        job_t *job = (job_t *)removeFront(list);
         cleanJob(job);
     }
 }
-
 
 /*
  *
@@ -149,7 +191,8 @@ void cleanJobs(List_t *list) {
  *
  */
 
-void addRoom(List_t *list, char *name, char *host) {
+void addRoom(List_t *list, char *name, char *host)
+{
     List_t *roomUsers = malloc(sizeof(List_t));
     roomUsers->head = NULL;
     roomUsers->length = 0;
@@ -162,12 +205,15 @@ void addRoom(List_t *list, char *name, char *host) {
     insertRear(list, newRoom);
 }
 
- // Find a room from a list of rooms
-room_t *findRoom(List_t *list, char *name) {
+// Find a room from a list of rooms
+room_t *findRoom(List_t *list, char *name)
+{
     node_t *head = list->head;
-    while (head != NULL) {
-        room_t *roomList = (room_t *) head->value;
-        if (strcmp(name, roomList->roomName) == 0) {
+    while (head != NULL)
+    {
+        room_t *roomList = (room_t *)head->value;
+        if (strcmp(name, roomList->roomName) == 0)
+        {
             return roomList;
         }
         head = head->next;
@@ -175,20 +221,25 @@ room_t *findRoom(List_t *list, char *name) {
     return NULL;
 }
 
-void joinRoom(List_t *list, char *name) {
+void joinRoom(List_t *list, char *name)
+{
     room_t *room = findRoom(list, name);
 }
 
-room_t *findUserInRoom(room_t *room, char *user) {
-    if (strcmp(room->host, user) == 0) {
+room_t *findUserInRoom(room_t *room, char *user)
+{
+    if (strcmp(room->host, user) == 0)
+    {
         return room;
     }
     List_t *users = room->users;
     int index = 0;
     node_t *head = users->head;
-    while (head != NULL) {
+    while (head != NULL)
+    {
         char *username = head->value;
-        if (strcmp(username, user) == 0) {
+        if (strcmp(username, user) == 0)
+        {
             return room;
         }
         head = head->next;
@@ -196,24 +247,29 @@ room_t *findUserInRoom(room_t *room, char *user) {
     return NULL;
 }
 
-void removeUserFromRoom(room_t *room, char *user) {
+void removeUserFromRoom(room_t *room, char *user)
+{
     List_t *users = room->users;
-    if (user == NULL) {
+    if (user == NULL)
+    {
         char *user = removeFront(users);
         free(user);
     }
-    else {
+    else
+    {
         node_t *head = users->head;
         int index = 0;
-        while (head != NULL) {
+        while (head != NULL)
+        {
             char *username = head->value;
-            if (strcmp(username, user) == 0) {
-                head = head->next;
+            if (strcmp(username, user) == 0)
+            {
                 removeByIndex(users, index);
                 free(username);
                 return;
             }
-            else {
+            else
+            {
                 index += 1;
                 head = head->next;
             }
@@ -222,34 +278,42 @@ void removeUserFromRoom(room_t *room, char *user) {
 }
 
 // Protocol RMDELETE
-void deleteRoom(List_t *list, char *name) {
-    if (name == NULL) {
-        room_t *room = (room_t *) removeFront(list);
+void deleteRoom(List_t *list, char *name)
+{
+    if (name == NULL)
+    {
+        room_t *room = (room_t *)removeFront(list);
         free(room->roomName);
         free(room->host);
-        while (room->users->head != NULL) {
+        while (room->users->head != NULL)
+        {
             removeUserFromRoom(room, NULL);
         }
         free(room->users);
         free(room);
     }
-    else {
+    else
+    {
         node_t *head = list->head;
         int index = 0;
-        while (head != NULL) {
-            room_t *room = (room_t *) head->value;
-            if (strcmp(room->roomName, name) == 0) {
+        while (head != NULL)
+        {
+            room_t *room = (room_t *)head->value;
+            if (strcmp(room->roomName, name) == 0)
+            {
                 removeByIndex(list, index);
                 free(room->roomName);
                 free(room->host);
-                while (room->users->head != NULL) {
+                while (room->users->head != NULL)
+                {
                     removeUserFromRoom(room, NULL);
                 }
                 free(room->users);
                 free(room);
                 return;
             }
-            else {
+            else
+            {
                 index += 1;
                 head = head->next;
             }
@@ -257,14 +321,16 @@ void deleteRoom(List_t *list, char *name) {
     }
 }
 
-
 // Protocol RMLIST
-char *getRoomList(List_t *list) {
+char *getRoomList(List_t *list)
+{
     char *rooms = NULL;
     node_t *head = list->head;
-    while (head != NULL) {
-        room_t *room = (room_t *) head->value;
-        if (rooms == NULL) {
+    while (head != NULL)
+    {
+        room_t *room = (room_t *)head->value;
+        if (rooms == NULL)
+        {
             rooms = calloc(strlen(room->roomName), strlen(room->roomName));
         }
         strcat(rooms, room->roomName);
@@ -273,10 +339,10 @@ char *getRoomList(List_t *list) {
 
         List_t *users = room->users;
         node_t *userHead = users->head;
-        
-        while (userHead != NULL) {
+
+        while (userHead != NULL)
+        {
             char *user = userHead->value;
-            rooms = realloc(rooms, strlen(rooms) + strlen(user) + 2);
             strcat(rooms, ", ");
             strcat(rooms, user);
             userHead = userHead->next;
@@ -288,20 +354,25 @@ char *getRoomList(List_t *list) {
 }
 
 // Prints room list (room name and users in the room)
-void printRooms(List_t *list) {
+void printRooms(List_t *list)
+{
     node_t *head = list->head;
-    if (head == NULL) {
+    if (head == NULL)
+    {
         printf("No Rooms\n");
     }
-    else {
-        while (head != NULL) {
-            room_t *roomList = (room_t *) head->value;
-            List_t *userList = (List_t *) roomList->users;
+    else
+    {
+        while (head != NULL)
+        {
+            room_t *roomList = (room_t *)head->value;
+            List_t *userList = (List_t *)roomList->users;
             node_t *usernode = userList->head; // pointer to the User Linked List
             printf("Room %s:", roomList->roomName);
             printf("Room %s:", roomList->roomName);
-            while (usernode != NULL) {
-                user_t *user = (user_t *) usernode->value;
+            while (usernode != NULL)
+            {
+                user_t *user = (user_t *)usernode->value;
                 printf("%s", user->name);
                 usernode = usernode->next;
             }
@@ -311,10 +382,11 @@ void printRooms(List_t *list) {
     }
 }
 
-
 // Clean the room list
-void cleanRooms(List_t *list) {
-    while (list->head != NULL) {
+void cleanRooms(List_t *list)
+{
+    while (list->head != NULL)
+    {
         deleteRoom(list, NULL);
     }
 }
