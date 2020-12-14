@@ -23,7 +23,6 @@ int rmcnt = 0;
 pthread_mutex_t user_lock;
 pthread_mutex_t room_lock;
 
-
 int listen_fd;
 
 char *auditLog = NULL;
@@ -34,10 +33,10 @@ void writeToAudit(char c[])
     FILE *fp;
 
     char buff[20];
-    struct tm *sTm;
+    struct tm *UTC;
     time_t now = time(0);
-    sTm = gmtime(&now);
-    strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", sTm);
+    UTC = localtime(&now); //local timezone
+    strftime(buff, sizeof(buff), "%Y-%m-%d %H:%M:%S", UTC);
 
     fp = fopen(auditLog, "a");
     fprintf(fp, "%s", c);
@@ -152,7 +151,7 @@ void *job_thread()
         pthread_mutex_lock(&job_lock);
         if (jobs->length > 0)
         {
-            currJob = (job_t *) removeFront(jobs);
+            currJob = (job_t *)removeFront(jobs);
             printf("Protocol: %d\n", currJob->protocol);
         }
         pthread_mutex_unlock(&job_lock);
@@ -161,7 +160,7 @@ void *job_thread()
         if (currJob != NULL)
         {
             if (currJob->protocol == USRLIST) // protocol USRLIST (COMPLETE)
-            { 
+            {
                 char *userList = getUserList(users, currJob->fd);
                 uint32_t size = 0;
 
@@ -176,7 +175,7 @@ void *job_thread()
                     free(userList);
             }
             else if (currJob->protocol == USRSEND) // protocol USRSEND
-            { 
+            {
                 user_t *fromUser = findUserByFd(users, currJob->fd);
 
                 char *receiver = getUserFromSent(currJob->data);
@@ -205,13 +204,13 @@ void *job_thread()
                 }
             }
             else if (currJob->protocol == RMCREATE) // protocol RMCREATE
-            { 
+            {
                 // Writer gets priority over room linked list and user linked list
                 char *roomName = calloc(strlen(currJob->data), strlen(currJob->data));
                 strcpy(roomName, currJob->data);
 
                 if (*roomName == 0) // checks if null room name (DOESN'T WORK)
-                { 
+                {
                     petr_header *res = makeHeader(0, ESERV);
                     wr_msg(currJob->fd, res, NULL);
                     free(res);
@@ -236,10 +235,10 @@ void *job_thread()
                 }
             }
             else if (currJob->protocol == RMJOIN) // protocol RMJOIN
-            { 
+            {
                 char *roomName = currJob->data;
                 if (*roomName == 0) // checks if null room name (DOESN'T WORK)
-                { 
+                {
                     petr_header *res = makeHeader(0, ESERV);
                     wr_msg(currJob->fd, res, NULL);
                     free(res);
@@ -270,7 +269,7 @@ void *job_thread()
                         }
                         petr_header *res = makeHeader(0, OK);
                         wr_msg(currJob->fd, res, NULL);
-                        free(res);   
+                        free(res);
                     }
                 }
             }
@@ -291,7 +290,7 @@ void *job_thread()
                     free(roomList);
             }
             else if (currJob->protocol == RMLEAVE) // protocol RMLEAVE
-            { 
+            {
                 char *roomName = currJob->data;
                 if (roomName == 0)
                 {
@@ -321,7 +320,7 @@ void *job_thread()
             else if (currJob->protocol == RMDELETE) // protocol RMDELETE
             {
                 char *roomName = currJob->data;
-                if (roomName == 0) // This checks if room is empty string with null terminator (I don't quite if this works) 
+                if (roomName == 0) // This checks if room is empty string with null terminator (I don't quite if this works)
                 {
                     petr_header *res = makeHeader(0, ERMNOTFOUND);
                     wr_msg(currJob->fd, res, NULL);
@@ -358,7 +357,7 @@ void *job_thread()
                 }
             }
             else if (currJob->protocol == RMSEND) // protocol RMSEND
-            { 
+            {
                 user_t *fromUser = findUserByFd(users, currJob->fd);
 
                 char *roomName = getUserFromSent(currJob->data);
@@ -391,9 +390,9 @@ void *job_thread()
                         }
                         head = head->next;
                     }
-                    
+
                     free(res);
-                    
+
                     if (recvMessage != NULL)
                         free(recvMessage);
                 }
@@ -405,7 +404,7 @@ void *job_thread()
                 }
             }
             else if (currJob->protocol == LOGOUT) // protocol LOGOUT
-            { 
+            {
                 user_t *user = findUserByFd(users, currJob->fd);
                 node_t *head = rooms->head;
                 while (head != NULL)
@@ -445,6 +444,7 @@ void *job_thread()
                 removeUser(users, user->name);
             }
             cleanJob(currJob);
+            writeToAudit("removing Job from job buffer");
         }
     }
     printf("Job thread killed!\n");
@@ -456,10 +456,12 @@ void *client_thread(void *clientfd)
 {
     pthread_detach(pthread_self());
     printf("Making client thread\n");
-    int client_fd = *(int *) clientfd;
+    int client_fd = *(int *)clientfd;
     free(clientfd);
     int received_size;
     fd_set read_fds;
+
+    char *c = malloc(256);
 
     int retval;
 
@@ -506,7 +508,7 @@ void *client_thread(void *clientfd)
         }
 
         // Read MSG from Client
-        petr_header *petrHeader = (petr_header *) buffer;
+        petr_header *petrHeader = (petr_header *)buffer;
         char *messageBody = NULL;
         if (petrHeader->msg_len != 0)
         {
@@ -516,6 +518,8 @@ void *client_thread(void *clientfd)
 
         pthread_mutex_lock(&buffer_lock);
         addJob(jobs, client_fd, petrHeader->msg_type, messageBody);
+        sprintf(c, "Added Job to job buffer from Client Thread ID: %ld", pthread_self());
+        writeToAudit(c);
         pthread_mutex_unlock(&buffer_lock);
 
         pthread_mutex_lock(&buffer_lock);
@@ -525,7 +529,9 @@ void *client_thread(void *clientfd)
         pthread_mutex_unlock(&buffer_lock);
     }
 
-    writeToAudit("Terminating Thread");
+    sprintf(c, "Terminating Client Thread ID: %ld", pthread_self());
+    writeToAudit(c);
+    free(c);
     printf("Killing client thread\n");
 
     // Need to delete user from room and delete room
@@ -573,7 +579,7 @@ void run_server(int server_port, int numThreads)
         // Wait connection from client
         printf("Wait for new client connection\n");
         int *client_fd = malloc(sizeof(int));
-        *client_fd = accept(listen_fd, (SA *) &client_addr, (socklen_t *) &client_addr_len);
+        *client_fd = accept(listen_fd, (SA *)&client_addr, (socklen_t *)&client_addr_len);
         writeToAudit("New client connection");
 
         pthread_mutex_lock(&server_lock);
@@ -583,23 +589,22 @@ void run_server(int server_port, int numThreads)
         pthread_mutex_unlock(&server_lock);
 
         if (*client_fd < 0) // If client connection fails
-        { 
+        {
             free(client_fd);
             writeToAudit("Client unable to connect");
             printf("Server shutting down\n");
             break;
         }
         else // Accept connection
-        { 
+        {
             char *c = malloc(256);
             printf("Client connetion accepted\n");
-
             writeToAudit("Client message accepted");
 
             // Read header information from client
             bzero(buffer, BUFFER_SIZE);
             int size = read(*client_fd, buffer, sizeof(buffer));
-            petr_header *req = (petr_header *) buffer;
+            petr_header *req = (petr_header *)buffer;
 
             // Check if client is trying to LOGIN
             if (req->msg_type == LOGIN)
@@ -613,13 +618,13 @@ void run_server(int server_port, int numThreads)
 
                 // Verify user name
                 if (*name == 0) // checks if null user name (DOESN'T WORK)
-                { 
+                {
                     petr_header *res = makeHeader(0, ESERV);
                     wr_msg(*client_fd, res, NULL);
                     free(name);
                 }
                 else if (findUserByName(users, name) == NULL) // If username not already taken
-                { 
+                {
                     // Add to user list
                     addUser(users, name, *client_fd);
 
@@ -635,17 +640,19 @@ void run_server(int server_port, int numThreads)
                     strcat(c, name);
                     strcat(c, "");
                     writeToAudit(c);
-                    free(c);
 
                     // Spawn client thread
                     // free(client_fd);
-                    pthread_create(&tid, NULL, client_thread, (void *) client_fd);
-                    writeToAudit("Making client thread.");
+                    pthread_create(&tid, NULL, client_thread, (void *)client_fd);
+                    sprintf(c, "Making client thread ID: %ld", tid);
+                    writeToAudit(c);
                 }
                 else
-                { // If it is already taken  
-                    free(c);
-                    writeToAudit("Client rejected because username already exists");
+                { // If it is already taken
+                    strcpy(c, "Client rejected because ");
+                    strcat(c, name);
+                    strcat(c, " already exists");
+                    writeToAudit(c);
 
                     // Reject login
                     petr_header *res = makeHeader(0, EUSREXISTS);
@@ -664,6 +671,7 @@ void run_server(int server_port, int numThreads)
                 writeToAudit("No LOGIN message from client.");
                 close(*client_fd);
             }
+            free(c);
         }
         pthread_mutex_lock(&server_lock);
         usercnt -= 1;
@@ -679,9 +687,9 @@ void run_server(int server_port, int numThreads)
 int main(int argc, char *argv[])
 {
     int opt;
-
     unsigned int port = 0;
     unsigned int n = 2;
+
     while ((opt = getopt(argc, argv, "hj:")) != -1)
     {
         switch (opt)
@@ -717,10 +725,14 @@ int main(int argc, char *argv[])
     }
 
     // argv[i+1]: ./bin/petr_server 3200 audit.txt
-    if (*(argv + optind + 1) != NULL) // create custom audit log or default
-        auditLog =  *(argv + optind + 1);
+    if (*(argv + optind + 1) != NULL)
+    { // create custom audit log or default
+        auditLog = *(argv + optind + 1);
+    }
     else
+    {
         auditLog = "auditLog.txt";
+    }
 
     if (port == 0)
     {

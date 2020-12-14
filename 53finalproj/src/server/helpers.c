@@ -176,12 +176,12 @@ char *makeRoomMessage(char *roomName, char* username, char* message)
     strcat(recvMessage, message);
     return recvMessage;
 }
+
 /*
  *
  * Job methods
  *
  */
-
 void addJob(List_t *list, int fileDescriptor, u_int8_t protocol, char *data)
 {
     job_t *job = calloc(sizeof(job_t), sizeof(job_t));
@@ -255,7 +255,7 @@ int findUserInRoom(room_t *room, char *user)
 {
     if (strcmp(room->host, user) == 0)
     {
-        return room;
+        return 1;
     }
     List_t *users = room->users;
     int index = 0;
