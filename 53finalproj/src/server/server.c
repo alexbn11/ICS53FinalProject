@@ -145,6 +145,7 @@ void *job_thread()
 {
     pthread_detach(pthread_self());
     printf("Job thread created!\n");
+    char *c = malloc(256);
     while (running)
     {
         job_t *currJob = NULL;
@@ -153,6 +154,8 @@ void *job_thread()
         {
             currJob = (job_t *)removeFront(jobs);
             printf("Protocol: %d\n", currJob->protocol);
+            sprintf(c, "Protocol: %d", currJob->protocol);
+            writeToAudit(c);
         }
         pthread_mutex_unlock(&job_lock);
 
@@ -447,6 +450,7 @@ void *job_thread()
             writeToAudit("removing Job from job buffer");
         }
     }
+    free(c);
     printf("Job thread killed!\n");
     pthread_exit(NULL);
 }
