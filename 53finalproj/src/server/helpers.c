@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "helpers.h"
 
+// Makes a header so that it fills up entire memory space (no leaks)
 petr_header *makeHeader(uint32_t msg_len, uint8_t msg_type)
 {
     petr_header *header = calloc(sizeof(petr_header), sizeof(petr_header));
@@ -17,6 +18,7 @@ petr_header *makeHeader(uint32_t msg_len, uint8_t msg_type)
  * User methods
  *
  */
+// Creates a user object and adds it to a list of users
 void addUser(List_t *list, char *name, int fileDescriptor)
 {
     user_t *newUser = calloc(sizeof(user_t), sizeof(user_t));
@@ -25,7 +27,7 @@ void addUser(List_t *list, char *name, int fileDescriptor)
     insertRear(list, newUser);
 }
 
-// HELPER: Finds the user in the given list by their username
+// Finds the user in the given list by their username
 user_t *findUserByName(List_t *list, char *name)
 {
     node_t *head = list->head;
@@ -100,7 +102,7 @@ void cleanUsers(List_t *list)
     }
 }
 
-// Protcool USRLIST
+// Gets the string for the list of users (not including the client)
 char *getUserList(List_t *list, int client)
 {
     char *names = NULL;
@@ -111,9 +113,15 @@ char *getUserList(List_t *list, int client)
         if (user->fd != client)
         {
             if (names == NULL)
-                names = calloc(strlen(user->name) + 1, strlen(user->name) + 1);
-
-            strcat(names, user->name);
+            {
+                names = calloc(strlen(user->name) + 1, strlen(user->name) + 2);
+                strcpy(names, user->name);
+            }
+            else 
+            {
+                names = realloc(names, strlen(names) + strlen(user->name) + 2);
+                strcat(names, user->name);
+            }
             strcat(names, "\n");
         }
         head = head->next;
@@ -139,6 +147,7 @@ void printUserList(List_t *list)
  * Message methods
  *
  */
+
 // Gets user from USRSEND
 char *getUserFromSent(char *body)
 {
@@ -157,18 +166,22 @@ char *getMessageFromSent(char *body)
     return message + 1;
 }
 
+// Makes a message for USRSEND
 char *makeUserMessage(char* username, char *message)
 {
-    char *recvMessage = calloc(strlen(username) + 2 + strlen(message), strlen(username) + 2 + strlen(message));
+    char *recvMessage = calloc(strlen(username) + 2 + strlen(message) + 1, 
+                               strlen(username) + 2 + strlen(message) + 1);
     strcpy(recvMessage, username);
     strcat(recvMessage, "\r\n");
     strcat(recvMessage, message);
     return recvMessage;
 }
 
+// Makes a message for RMSEND
 char *makeRoomMessage(char *roomName, char* username, char* message)
 {
-    char *recvMessage = calloc(strlen(roomName), strlen(roomName));
+    char *recvMessage = calloc(strlen(roomName) + 2 + strlen(username) + 2 + strlen(message) + 1, 
+                               strlen(roomName) + 2 + strlen(username) + 2 + strlen(message) + 1);
     strcpy(recvMessage, roomName);
     strcat(recvMessage, "\r\n");
     strcat(recvMessage, username);
@@ -182,6 +195,7 @@ char *makeRoomMessage(char *roomName, char* username, char* message)
  *
  */
 
+// Creates a job object and adds it to a list of jobs
 void addJob(List_t *list, int fileDescriptor, u_int8_t protocol, char *data)
 {
     job_t *job = calloc(sizeof(job_t), sizeof(job_t));
@@ -193,7 +207,7 @@ void addJob(List_t *list, int fileDescriptor, u_int8_t protocol, char *data)
     insertRear(list, job);
 }
 
-// Free a job
+// Cleans up a job (freeing, etc.)
 void cleanJob(job_t *job)
 {
     if (job->data != NULL)
@@ -201,6 +215,7 @@ void cleanJob(job_t *job)
     free(job);
 }
 
+// Cleans up a list of jobs (freeing, etc.)
 void cleanJobs(List_t *list)
 {
     while (list->head != NULL)
@@ -215,7 +230,7 @@ void cleanJobs(List_t *list)
  * Room methods
  *
  */
-
+// Creates a room object and adds it to a list of rooms
 void addRoom(List_t *list, char *name, char *host)
 {
     List_t *roomUsers = calloc(sizeof(List_t), sizeof(List_t));
@@ -236,7 +251,7 @@ room_t *findRoom(List_t *list, char *name)
     node_t *head = list->head;
     while (head != NULL)
     {
-        room_t *roomList = (room_t *)head->value;
+        room_t *roomList = (room_t *) head->value;
         if (strcmp(name, roomList->roomName) == 0)
         {
             return roomList;
@@ -246,16 +261,12 @@ room_t *findRoom(List_t *list, char *name)
     return NULL;
 }
 
-void joinRoom(List_t *list, char *name)
-{
-    room_t *room = findRoom(list, name);
-}
-
+// Checks if a user is in the room (as host or joinee)
 int findUserInRoom(room_t *room, char *user)
 {
     if (strcmp(room->host, user) == 0)
     {
-        return room;
+        return 1;
     }
     List_t *users = room->users;
     int index = 0;
@@ -272,6 +283,7 @@ int findUserInRoom(room_t *room, char *user)
     return 0;
 }
 
+// Removes a user from a room
 void removeUserFromRoom(room_t *room, char *user)
 {
     List_t *users = room->users;
@@ -302,7 +314,7 @@ void removeUserFromRoom(room_t *room, char *user)
     }
 }
 
-// Protocol RMDELETE
+// Deletes a room in a list of rooms
 void deleteRoom(List_t *list, char *name)
 {
     if (name == NULL)
@@ -346,7 +358,7 @@ void deleteRoom(List_t *list, char *name)
     }
 }
 
-// Protocol RMLIST
+// Gets the string for the list of rooms
 char *getRoomList(List_t *list)
 {
     char *roomlist = NULL;
@@ -356,9 +368,16 @@ char *getRoomList(List_t *list)
         room_t *room = (room_t *) head->value;
 
         if (roomlist == NULL)
-            roomlist = calloc(strlen(room->roomName) + 1, strlen(room->roomName) + 1);
-
-        strcat(roomlist, room->roomName);
+        {
+            roomlist = calloc(strlen(room->roomName) + 2 + strlen(room->host) + 2, 
+                              strlen(room->roomName) + 2 + strlen(room->host) + 2);
+            strcpy(roomlist, room->roomName);
+        }
+        else 
+        {
+            roomlist = realloc(roomlist, strlen(roomlist) + strlen(room->roomName) + 2 + strlen(room->host) + 2);
+            strcat(roomlist, room->roomName);
+        }
         strcat(roomlist, ": ");
         strcat(roomlist, room->host);
 
@@ -367,6 +386,7 @@ char *getRoomList(List_t *list)
         while (userHead != NULL)
         {
             char *user = (char *) userHead->value;
+            roomlist = realloc(roomlist, strlen(roomlist) + 1 + strlen(user) + 2);
             strcat(roomlist, ",");
             strcat(roomlist, user);
             userHead = userHead->next;
@@ -390,7 +410,7 @@ void printRooms(List_t *list)
         while (head != NULL)
         {
             room_t *roomList = (room_t *)head->value;
-            printf("Room %s:", roomList->roomName);
+            printf("Room %s: %s ", roomList->roomName, roomList->host);
             List_t *userList = (List_t *)roomList->users;
             node_t *usernode = userList->head; // pointer to the User Linked List
             while (usernode != NULL)
@@ -405,7 +425,7 @@ void printRooms(List_t *list)
     }
 }
 
-// Clean the room list
+// Cleans the room list (freeing, etc.)
 void cleanRooms(List_t *list)
 {
     while (list->head != NULL)

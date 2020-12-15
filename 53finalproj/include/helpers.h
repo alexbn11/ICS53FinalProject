@@ -57,7 +57,6 @@ void cleanJobs(List_t *list);
 // Room methods
 void addRoom(List_t *list, char *name, char *host);
 room_t *findRoom(List_t *list, char *name);
-// void joinRoom(room_t *room, char *name);
 room_t *findFirstRoomWithUser(List_t *list, char *user);
 int findUserInRoom(room_t *room, char *user);
 void removeUserFromRoom(room_t *room, char *user);
