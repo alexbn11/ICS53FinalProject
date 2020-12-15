@@ -1,0 +1,27 @@
+New client connection 2020-12-15 02:13:20
+Client message accepted 2020-12-15 02:13:20
+New LOGIN message from client 2020-12-15 02:13:20
+Client successfully login as: pep 2020-12-15 02:13:20
+Making client thread ID: 139827609626368 2020-12-15 02:13:20
+Added Job to job buffer from Client Thread ID: 139827609626368 2020-12-15 02:13:26
+Received Protocol: 50 2020-12-15 02:13:26
+Sent Protocol: 50 2020-12-15 02:13:26
+removing Job from job buffer 2020-12-15 02:13:26
+Added Job to job buffer from Client Thread ID: 139827609626368 2020-12-15 02:13:43
+Received Protocol: 32 2020-12-15 02:13:43
+Sent Protocol: 0 2020-12-15 02:13:43
+removing Job from job buffer 2020-12-15 02:13:43
+Added Job to job buffer from Client Thread ID: 139827609626368 2020-12-15 02:14:00
+Received Protocol: 37 2020-12-15 02:14:00
+Sent Protocol: 45 2020-12-15 02:14:00
+removing Job from job buffer 2020-12-15 02:14:00
+Added Job to job buffer from Client Thread ID: 139827609626368 2020-12-15 02:14:13
+Received Protocol: 33 2020-12-15 02:14:13
+Sent Protocol: 0 2020-12-15 02:14:13
+removing Job from job buffer 2020-12-15 02:14:13
+Added Job to job buffer from Client Thread ID: 139827609626368 2020-12-15 02:15:18
+Received Protocol: 17 2020-12-15 02:15:18
+Sent Protocol: 0 2020-12-15 02:15:18
+removing Job from job buffer 2020-12-15 02:15:18
+New client connection 2020-12-15 02:15:28
+Client unable to connect 2020-12-15 02:15:28

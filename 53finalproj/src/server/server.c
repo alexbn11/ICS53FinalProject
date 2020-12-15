@@ -146,6 +146,7 @@ void *job_thread()
     pthread_detach(pthread_self());
     printf("Job thread created!\n");
     char *c = malloc(256);
+
     while (running)
     {
         job_t *currJob = NULL;
@@ -154,7 +155,7 @@ void *job_thread()
         {
             currJob = (job_t *)removeFront(jobs);
             printf("Protocol: %d\n", currJob->protocol);
-            sprintf(c, "Protocol: %d", currJob->protocol);
+            sprintf(c, "Received Protocol: %d", currJob->protocol);
             writeToAudit(c);
         }
         pthread_mutex_unlock(&job_lock);
@@ -172,6 +173,8 @@ void *job_thread()
 
                 petr_header *res = makeHeader(size, USRLIST);
                 wr_msg(currJob->fd, res, userList);
+                sprintf(c, "Sent Protocol: %d", USRLIST);
+                writeToAudit(c);
                 free(res);
 
                 if (userList != NULL)
@@ -191,9 +194,14 @@ void *job_thread()
                     uint32_t size = strlen(recvMessage) + 1;
                     petr_header *res = makeHeader(size, USRRECV);
                     wr_msg(toUser->fd, res, recvMessage);
+                    sprintf(c, "Sent Protocol: %d", USRRECV);
+                    writeToAudit(c);
+
                     res->msg_len = 0;
                     res->msg_type = OK;
                     wr_msg(currJob->fd, res, NULL);
+                    sprintf(c, "Sent Protocol: %d", OK);
+                    writeToAudit(c);
                     free(res);
 
                     if (recvMessage != NULL)
@@ -203,6 +211,8 @@ void *job_thread()
                 {
                     petr_header *res = makeHeader(0, EUSRNOTFOUND);
                     wr_msg(currJob->fd, res, NULL);
+                    sprintf(c, "Sent Protocol: %d", EUSRNOTFOUND);
+                    writeToAudit(c);
                     free(res);
                 }
             }
@@ -216,6 +226,8 @@ void *job_thread()
                 {
                     petr_header *res = makeHeader(0, ESERV);
                     wr_msg(currJob->fd, res, NULL);
+                    sprintf(c, "Sent Protocol: %d", ESERV);
+                    writeToAudit(c);
                     free(res);
                 }
                 else if (findRoom(rooms, roomName) == NULL)
@@ -228,12 +240,16 @@ void *job_thread()
 
                     petr_header *res = makeHeader(0, OK);
                     wr_msg(currJob->fd, res, NULL);
+                    sprintf(c, "Sent Protocol: %d", OK);
+                    writeToAudit(c);
                     free(res);
                 }
                 else
                 {
                     petr_header *res = makeHeader(0, ERMEXISTS);
                     wr_msg(currJob->fd, res, NULL);
+                    sprintf(c, "Sent Protocol: %d", ERMEXISTS);
+                    writeToAudit(c);
                     free(res);
                 }
             }
@@ -244,6 +260,8 @@ void *job_thread()
                 {
                     petr_header *res = makeHeader(0, ESERV);
                     wr_msg(currJob->fd, res, NULL);
+                    sprintf(c, "Sent Protocol: %d", ESERV);
+                    writeToAudit(c);
                     free(res);
                 }
                 else
@@ -253,12 +271,16 @@ void *job_thread()
                     {
                         petr_header *res = makeHeader(0, ERMNOTFOUND);
                         wr_msg(currJob->fd, res, NULL);
+                        sprintf(c, "Sent Protocol: %d", ERMNOTFOUND);
+                        writeToAudit(c);
                         free(res);
                     }
                     else if (room->users->length + 1 == ROOM_LIMIT)
                     {
                         petr_header *res = makeHeader(0, ERMFULL);
                         wr_msg(currJob->fd, res, NULL);
+                        sprintf(c, "Sent Protocol: %d", ERMFULL);
+                        writeToAudit(c);
                         free(res);
                     }
                     else
@@ -272,6 +294,8 @@ void *job_thread()
                         }
                         petr_header *res = makeHeader(0, OK);
                         wr_msg(currJob->fd, res, NULL);
+                        sprintf(c, "Sent Protocol: %d", OK);
+                        writeToAudit(c);
                         free(res);
                     }
                 }
@@ -286,6 +310,8 @@ void *job_thread()
 
                 petr_header *res = makeHeader(size, RMLIST);
                 wr_msg(currJob->fd, res, roomList);
+                sprintf(c, "Sent Protocol: %d", RMLIST);
+                writeToAudit(c);
                 // printf("%s\n", roomList);
                 free(res);
 
@@ -299,6 +325,8 @@ void *job_thread()
                 {
                     petr_header *res = makeHeader(0, ERMNOTFOUND);
                     wr_msg(currJob->fd, res, NULL);
+                    sprintf(c, "Sent Protocol: %d", ERMNOTFOUND);
+                    writeToAudit(c);
                     free(res);
                 }
                 else
@@ -309,6 +337,8 @@ void *job_thread()
                     {
                         petr_header *res = makeHeader(0, ERMDENIED);
                         wr_msg(currJob->fd, res, NULL);
+                        sprintf(c, "Sent Protocol: %d", ERMDENIED);
+                        writeToAudit(c);
                         free(res);
                     }
                     else
@@ -316,6 +346,8 @@ void *job_thread()
                         removeUserFromRoom(room, requester);
                         petr_header *res = makeHeader(0, OK);
                         wr_msg(currJob->fd, res, NULL);
+                        sprintf(c, "Sent Protocol: %d", OK);
+                        writeToAudit(c);
                         free(res);
                     }
                 }
@@ -327,6 +359,8 @@ void *job_thread()
                 {
                     petr_header *res = makeHeader(0, ERMNOTFOUND);
                     wr_msg(currJob->fd, res, NULL);
+                    sprintf(c, "Sent Protocol: %d", ERMNOTFOUND);
+                    writeToAudit(c);
                     free(res);
                 }
                 else
@@ -337,6 +371,8 @@ void *job_thread()
                     {
                         petr_header *res = makeHeader(0, ERMDENIED);
                         wr_msg(currJob->fd, res, NULL);
+                        sprintf(c, "Sent Protocol: %d", ERMDENIED);
+                        writeToAudit(c);
                         free(res);
                     }
                     else // Deleting Room
@@ -348,6 +384,8 @@ void *job_thread()
                             char *name = head->value;
                             user_t *currUser = findUserByName(users, name);
                             wr_msg(currUser->fd, res, roomName);
+                            sprintf(c, "Sent Protocol: %d", RMCLOSED);
+                            writeToAudit(c);
                             head = head->next;
                         }
 
@@ -356,6 +394,8 @@ void *job_thread()
                         res->msg_len = 0;
                         res->msg_type = OK;
                         wr_msg(currJob->fd, res, NULL);
+                        sprintf(c, "Sent Protocol: %d", OK);
+                        writeToAudit(c);
                     }
                 }
             }
@@ -369,6 +409,8 @@ void *job_thread()
                 {
                     petr_header *res = makeHeader(0, OK);
                     wr_msg(currJob->fd, res, NULL);
+                    sprintf(c, "Sent Protocol: %d", OK);
+                    writeToAudit(c);
 
                     char *message = getMessageFromSent(currJob->data);
                     char *recvMessage = makeRoomMessage(roomName, fromUser->name, message);
@@ -381,7 +423,11 @@ void *job_thread()
                     node_t *head = room->users->head;
 
                     if (currJob->fd != findUserByName(users, room->host)->fd)
+                    {
                         wr_msg(findUserByName(users, room->host)->fd, res, recvMessage);
+                        sprintf(c, "Sent Protocol: %d", RMRECV);
+                        writeToAudit(c);
+                    }
 
                     while (head != NULL)
                     {
@@ -390,6 +436,8 @@ void *job_thread()
                         if (currUser->fd != currJob->fd)
                         {
                             wr_msg(currUser->fd, res, recvMessage);
+                            sprintf(c, "Sent Protocol: %d", RMRECV);
+                            writeToAudit(c);
                         }
                         head = head->next;
                     }
@@ -403,6 +451,8 @@ void *job_thread()
                 {
                     petr_header *res = makeHeader(0, ERMNOTFOUND);
                     wr_msg(currJob->fd, res, NULL);
+                    sprintf(c, "Sent Protocol: %d", ERMNOTFOUND);
+                    writeToAudit(c);
                     free(res);
                 }
             }
@@ -424,6 +474,8 @@ void *job_thread()
                                 char *name = userHead->value;
                                 user_t *currUser = findUserByName(users, name);
                                 wr_msg(currUser->fd, res, room->roomName);
+                                sprintf(c, "Sent Protocol: %d", RMCLOSED);
+                                writeToAudit(c);
                                 userHead = userHead->next;
                             }
                             head = head->next;
@@ -443,6 +495,8 @@ void *job_thread()
                 }
                 petr_header *res = makeHeader(0, OK);
                 wr_msg(currJob->fd, res, NULL);
+                sprintf(c, "Sent Protocol: %d", OK);
+                writeToAudit(c);
                 free(res);
                 removeUser(users, user->name);
             }
@@ -458,7 +512,7 @@ void *job_thread()
 // Client thread
 void *client_thread(void *clientfd)
 {
-    pthread_detach(pthread_self());
+    pthread_detach(pthread_self()); // When a detached thread terminates, its resources are automatically released back to the system
     printf("Making client thread\n");
     int client_fd = *(int *)clientfd;
     free(clientfd);
@@ -533,6 +587,7 @@ void *client_thread(void *clientfd)
         pthread_mutex_unlock(&buffer_lock);
     }
 
+    //write to auditLog
     sprintf(c, "Terminating Client Thread ID: %ld", pthread_self());
     writeToAudit(c);
     free(c);
@@ -717,6 +772,7 @@ int main(int argc, char *argv[])
 
     // optind intialized to 1 by the system,
     // getopt updates it when it processes the option characters
+    // this lets us type in the parameters without the flags
     // argv[i]: ./bin/petr_server 3200
     if (*(argv + optind) != NULL)
     {
